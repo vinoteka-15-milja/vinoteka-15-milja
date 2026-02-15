@@ -99,6 +99,101 @@ img {
 
 
 /* ============================================
+   UNDER CONSTRUCTION
+   Remove this block when the site is ready
+   ============================================ */
+.under-construction {
+  position: fixed;
+  inset: 0;
+  z-index: 200000;
+  background: linear-gradient(160deg, #1c1015 0%, #2a1520 40%, #1a1218 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.uc-content {
+  text-align: center;
+  max-width: 500px;
+  width: 100%;
+  animation: ageGateIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.uc-logo-img {
+  height: 160px;
+  width: auto;
+  margin: 0 auto 20px;
+  display: block;
+  filter: brightness(0) invert(73%) sepia(30%) saturate(500%) hue-rotate(5deg) brightness(90%) drop-shadow(0 4px 20px rgba(201, 169, 110, 0.3));
+}
+
+.uc-brand {
+  margin-bottom: 40px;
+}
+
+.uc-name {
+  display: block;
+  font-family: var(--ff-heading);
+  font-size: var(--fs-3xl);
+  font-weight: var(--fw-bold);
+  color: var(--clr-gold);
+  letter-spacing: 2px;
+  line-height: 1.2;
+}
+
+.uc-sub {
+  display: block;
+  font-family: var(--ff-heading);
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-regular);
+  font-style: italic;
+  color: rgba(201, 169, 110, 0.7);
+  letter-spacing: 3px;
+}
+
+.uc-title {
+  font-family: var(--ff-heading);
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-semibold);
+  color: var(--clr-cream);
+  margin-bottom: 16px;
+}
+
+.uc-text {
+  font-family: var(--ff-body);
+  font-size: var(--fs-md);
+  color: rgba(250, 246, 240, 0.7);
+  line-height: 1.7;
+  margin-bottom: 32px;
+}
+
+.uc-divider {
+  width: 60px;
+  height: 1px;
+  background: var(--clr-gold);
+  opacity: 0.4;
+  margin: 0 auto 32px;
+}
+
+.uc-contact {
+  font-family: var(--ff-body);
+  font-size: var(--fs-sm);
+  color: rgba(250, 246, 240, 0.5);
+  line-height: 2;
+}
+
+.uc-contact a {
+  color: var(--clr-gold);
+  text-decoration: none;
+  transition: opacity 0.3s;
+}
+
+.uc-contact a:hover {
+  opacity: 0.8;
+}
+
+/* ============================================
    AGE GATE (18+ Verification)
    ============================================ */
 .age-gate-overlay {
@@ -149,13 +244,15 @@ body.age-locked {
   }
 }
 
-.age-gate-icon {
-  font-size: 3.5rem;
-  margin-bottom: 8px;
-  filter: drop-shadow(0 4px 12px rgba(201, 169, 110, 0.3));
+.age-gate-logo-img {
+  height: 120px;
+  width: auto;
+  margin: 0 auto 12px;
+  display: block;
+  filter: brightness(0) invert(73%) sepia(30%) saturate(500%) hue-rotate(5deg) brightness(90%) drop-shadow(0 4px 12px rgba(201, 169, 110, 0.3));
 }
 
-.age-gate-logo {
+.age-gate-brand {
   margin-bottom: 28px;
 }
 
@@ -242,6 +339,29 @@ body.age-locked {
   font-size: var(--fs-xs);
   color: rgba(250, 246, 240, 0.35);
   line-height: 1.5;
+}
+
+.age-gate-denied {
+  display: none;
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid rgba(200, 60, 60, 0.4);
+  border-radius: 10px;
+  background: rgba(200, 60, 60, 0.1);
+}
+
+.age-gate-denied p {
+  font-family: var(--ff-body);
+  font-size: var(--fs-sm);
+  color: rgba(250, 246, 240, 0.8);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.age-gate-denied p + p {
+  margin-top: 8px;
+  font-size: var(--fs-xs);
+  color: rgba(250, 246, 240, 0.5);
 }
 
 @media (max-width: 480px) {
@@ -387,9 +507,11 @@ button {
   z-index: 1001;
 }
 
-.logo-icon {
-  font-size: 28px;
-  filter: grayscale(0.2);
+.logo-img {
+  height: 52px;
+  width: auto;
+  display: block;
+  filter: brightness(0) invert(73%) sepia(30%) saturate(500%) hue-rotate(5deg) brightness(90%);
 }
 
 .logo-text {
@@ -412,6 +534,13 @@ button {
   font-weight: var(--fw-regular);
   color: var(--clr-gold);
   font-style: italic;
+}
+
+.footer-logo-img {
+  height: 100px;
+  width: auto;
+  display: block;
+  filter: brightness(0) invert(73%) sepia(30%) saturate(500%) hue-rotate(5deg) brightness(90%);
 }
 
 /* Navigation links */

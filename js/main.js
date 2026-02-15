@@ -34,7 +34,12 @@
     });
 
     noBtn.addEventListener('click', function () {
-      window.location.href = 'https://www.google.com';
+      var denied = document.getElementById('age-gate-denied');
+      var title = overlay.querySelector('.age-gate-title');
+      var text = overlay.querySelector('.age-gate-text');
+      if (title) title.textContent = 'Pristup odbijen';
+      if (text) text.style.display = 'none';
+      if (denied) denied.style.display = 'block';
     });
   }
 
