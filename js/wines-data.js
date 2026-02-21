@@ -71,7 +71,7 @@ var PRODUCTS = [
   { name: "Minić Dorotej Rskavac", winery: "Minić", price: 2350, type: "red", country: "rs", region: "Srbija" },
   { name: "Porta Cuvée", winery: "Porta", price: 1790, type: "red", country: "rs", region: "Srbija" },
   { name: "Porta Merlot", winery: "Porta", price: 1470, type: "red", country: "rs", region: "Srbija" },
-  { name: "Pusula Rinfuz Crveno 1L", winery: "Pusula", price: 470, type: "red", country: "rs", region: "Srbija" },
+  // { name: "Pusula Rinfuz Crveno 1L", winery: "Pusula", price: 470, type: "red", country: "rs", region: "Srbija" },
   { name: "Radovanović Cabernet", winery: "Radovanović", price: 1520, type: "red", country: "rs", region: "Šumadija", image: "images/wines/radovanović-cabernet-sauvignon-reserve.png" },
   { name: "Radovanović Cabernet Reserve", winery: "Radovanović", price: 3600, type: "red", country: "rs", region: "Šumadija" },
   { name: "Temet Ergo Crveno", winery: "Temet", price: 3640, type: "red", country: "rs", region: "Tri Morave" },
@@ -428,7 +428,7 @@ var PRODUCTS = [
   { name: "Bojkovčanka Viljamovka Premium", winery: "Bojkovčanka", price: 3340, type: "rakija", country: "rs", region: "Srbija" },
   { name: "Djedova Rakija Šljiva", winery: "Djedova Rakija", price: 2980, type: "rakija", country: "rs", region: "Srbija" },
   { name: "Gorda Šljiva", winery: "Gorda", price: 3680, type: "rakija", country: "rs", region: "Srbija" },
-  { name: "Gorda Šljiva Kutija", winery: "Gorda", price: 4040, type: "rakija", country: "rs", region: "Srbija" },
+  { name: "Gorda Šljiva Sa Kutijom", winery: "Gorda", price: 4040, type: "rakija", country: "rs", region: "Srbija" },
   { name: "Jelički Dukat Šljiva", winery: "Jelički Dukat", price: 4920, type: "rakija", country: "rs", region: "Srbija" },
   { name: "Limit Brusnica & Badem", winery: "Limit", price: 1250, type: "rakija", country: "rs", region: "Srbija" },
   { name: "Limit Čokolada & Narandža", winery: "Limit", price: 1250, type: "rakija", country: "rs", region: "Srbija" },
@@ -448,13 +448,13 @@ var PRODUCTS = [
   { name: "Srpska 3 Medena Kapljica", winery: "Srpska 3", price: 2440, type: "rakija", country: "rs", region: "Srbija" },
   { name: "Uteha Naša", winery: "Uteha", price: 7890, type: "rakija", country: "rs", region: "Srbija" },
   { name: "Zarić Kraljica", winery: "Zarić", price: 3260, type: "rakija", country: "rs", region: "Srbija" },
-  { name: "Zarić Kraljica Kutija", winery: "Zarić", price: 3530, type: "rakija", country: "rs", region: "Srbija" },
+  { name: "Zarić Kraljica Sa Kutijom", winery: "Zarić", price: 3530, type: "rakija", country: "rs", region: "Srbija" },
   { name: "Zarić Magija", winery: "Zarić", price: 3620, type: "rakija", country: "rs", region: "Srbija" },
-  { name: "Zarić Magija Kutija", winery: "Zarić", price: 3890, type: "rakija", country: "rs", region: "Srbija" },
+  { name: "Zarić Magija Sa Kutijom", winery: "Zarić", price: 3890, type: "rakija", country: "rs", region: "Srbija" },
   { name: "Zarić Medena", winery: "Zarić", price: 2520, type: "rakija", country: "rs", region: "Srbija" },
   { name: "Zarić Nostalgija", winery: "Zarić", price: 3330, type: "rakija", country: "rs", region: "Srbija" },
-  { name: "Zarić Nostalgija Kutija", winery: "Zarić", price: 3600, type: "rakija", country: "rs", region: "Srbija" },
-  { name: "Zarić Opsesija Kutija", winery: "Zarić", price: 13900, type: "rakija", country: "rs", region: "Srbija" },
+  { name: "Zarić Nostalgija Sa Kutijom", winery: "Zarić", price: 3600, type: "rakija", country: "rs", region: "Srbija" },
+  { name: "Zarić Opsesija Sa Kutijom", winery: "Zarić", price: 13900, type: "rakija", country: "rs", region: "Srbija" },
 
   // ========================================
   // VISKI / WHISKEY
@@ -492,8 +492,8 @@ var PRODUCTS = [
   { name: "Maslinovo Ulje Salvela Bjelica 0.25L", winery: "Salvela", price: 1790, type: "delicacy", country: "hr", region: "Istra" },
   { name: "Maslinovo Ulje Salvela Buža 0.25L", winery: "Salvela", price: 1790, type: "delicacy", country: "hr", region: "Istra" },
   { name: "Njeguški Pršut list 100g", winery: "Njeguški", price: 290, type: "delicacy", country: "me", region: "Crna Gora" },
-  { name: "Med Bagremov 0.5kg", winery: "Domaći", price: 750, type: "delicacy", country: "rs", region: "Srbija" },
-  { name: "Med Livadski 0.5kg", winery: "Domaći", price: 750, type: "delicacy", country: "rs", region: "Srbija" },
+  // { name: "Med Bagremov 0.5kg", winery: "Domaći", price: 750, type: "delicacy", country: "rs", region: "Srbija" },
+  // { name: "Med Livadski 0.5kg", winery: "Domaći", price: 750, type: "delicacy", country: "rs", region: "Srbija" },
 ];
 
 /* Country display names and flags */

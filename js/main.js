@@ -91,6 +91,13 @@
   var activeOrigin = 'all';
   var searchQuery = '';
 
+  /* Lazy loading state */
+  var BATCH_SIZE = 24;
+  var displayedCount = 0;
+  var filteredProducts = [];
+  var sentinel = null;
+  var lazyObserver = null;
+
   /* Icons per type */
   var TYPE_ICONS = {
     red: '&#127863;', white: '&#127863;', rose: '&#127863;',
@@ -186,80 +193,99 @@
 
 
   /* ============================================
-     RENDER ALL PRODUCT CARDS
+     GET FILTERED PRODUCTS FROM DATA
      ============================================ */
-  function renderAllCards() {
-    if (!winesGrid || typeof PRODUCTS === 'undefined') return;
-    var html = '';
-    for (var i = 0; i < PRODUCTS.length; i++) {
-      html += createCardHTML(PRODUCTS[i]);
-    }
-    winesGrid.innerHTML = html;
-  }
-
-
-  /* ============================================
-     FILTER & SEARCH
-     ============================================ */
-  function filterWines() {
-    var cards = winesGrid.querySelectorAll('.wine-card');
-    var visibleCount = 0;
+  function getFilteredProducts() {
+    if (typeof PRODUCTS === 'undefined') return [];
     var query = searchQuery.toLowerCase().trim();
-
-    /* "other" origin = not rs, hr, ba, it, fr, es */
     var mainCountries = ['rs', 'hr', 'ba', 'it', 'fr', 'es'];
 
-    cards.forEach(function (card) {
-      var category = card.getAttribute('data-category');
-      var country = card.getAttribute('data-country');
+    return PRODUCTS.filter(function (product) {
+      var matchCategory = activeCategory === 'all' || product.type === activeCategory;
 
-      /* Category match */
-      var matchCategory = activeCategory === 'all' || category === activeCategory;
-
-      /* Origin/country match */
       var matchOrigin = true;
       if (activeOrigin !== 'all') {
         if (activeOrigin === 'other') {
-          matchOrigin = mainCountries.indexOf(country) === -1;
+          matchOrigin = mainCountries.indexOf(product.country) === -1;
         } else {
-          matchOrigin = country === activeOrigin;
+          matchOrigin = product.country === activeOrigin;
         }
       }
 
-      /* Search match (diacritics-insensitive) */
       var matchSearch = true;
       if (query.length > 0) {
-        var name = (card.querySelector('.wine-name') || {}).textContent || '';
-        var winery = (card.querySelector('.wine-grape') || {}).textContent || '';
-        var combined = (name + ' ' + winery).toLowerCase();
+        var combined = (product.name + ' ' + product.winery).toLowerCase();
         var combinedNorm = removeDiacritics(combined);
         var queryNorm = removeDiacritics(query);
         matchSearch = combined.indexOf(query) !== -1 || combinedNorm.indexOf(queryNorm) !== -1;
       }
 
-      if (matchCategory && matchOrigin && matchSearch) {
-        card.classList.remove('hidden');
-        card.style.display = '';
-        visibleCount++;
-      } else {
-        card.classList.add('hidden');
-        card.style.display = 'none';
-      }
+      return matchCategory && matchOrigin && matchSearch;
     });
+  }
 
-    /* No results */
+
+  /* ============================================
+     RENDER NEXT BATCH OF CARDS (LAZY LOADING)
+     ============================================ */
+  function renderBatch() {
+    if (!winesGrid || displayedCount >= filteredProducts.length) return;
+    var end = Math.min(displayedCount + BATCH_SIZE, filteredProducts.length);
+    var html = '';
+    for (var i = displayedCount; i < end; i++) {
+      html += createCardHTML(filteredProducts[i]);
+    }
+    winesGrid.insertAdjacentHTML('beforeend', html);
+    displayedCount = end;
+
+    /* Hide sentinel when all loaded */
+    if (sentinel) {
+      sentinel.style.display = displayedCount >= filteredProducts.length ? 'none' : 'block';
+    }
+  }
+
+
+  /* ============================================
+     FILTER & SEARCH (resets lazy loading)
+     ============================================ */
+  function filterWines() {
+    filteredProducts = getFilteredProducts();
+    displayedCount = 0;
+    if (winesGrid) winesGrid.innerHTML = '';
+    renderBatch();
+
     if (noResults) {
-      noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+      noResults.style.display = filteredProducts.length === 0 ? 'block' : 'none';
     }
 
-    /* Results count */
     if (resultsCount) {
-      if (activeCategory === 'all' && activeOrigin === 'all' && query.length === 0) {
-        resultsCount.textContent = 'Prikazano: ' + visibleCount + ' artikala';
+      if (activeCategory === 'all' && activeOrigin === 'all' && searchQuery.trim().length === 0) {
+        resultsCount.textContent = 'Prikazano: ' + filteredProducts.length + ' artikala';
       } else {
-        resultsCount.textContent = 'Pronađeno: ' + visibleCount + ' artikala';
+        resultsCount.textContent = 'Pronađeno: ' + filteredProducts.length + ' artikala';
       }
     }
+  }
+
+
+  /* ============================================
+     INIT LAZY LOADING OBSERVER
+     ============================================ */
+  function initLazyLoad() {
+    if (!winesGrid || !('IntersectionObserver' in window)) return;
+
+    sentinel = document.createElement('div');
+    sentinel.className = 'lazy-sentinel';
+    sentinel.style.height = '1px';
+    winesGrid.parentNode.insertBefore(sentinel, winesGrid.nextSibling);
+
+    lazyObserver = new IntersectionObserver(function (entries) {
+      if (entries[0].isIntersecting && displayedCount < filteredProducts.length) {
+        renderBatch();
+      }
+    }, { rootMargin: '300px' });
+
+    lazyObserver.observe(sentinel);
   }
 
 
@@ -421,7 +447,7 @@
 
     /* 1. Render dynamic cards */
     renderFeatured();
-    renderAllCards();
+    initLazyLoad();
 
     /* 2. Scroll events */
     window.addEventListener('scroll', function () {
