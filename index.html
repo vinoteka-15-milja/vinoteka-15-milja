@@ -77,15 +77,22 @@
           <li><a href="#home" class="nav-link active">Početna</a></li>
           <li><a href="#about" class="nav-link">O nama</a></li>
           <li><a href="#wines" class="nav-link">Vina</a></li>
-          <li><a href="#contact" class="nav-link">Kontakt</a></li>
+          <li><a href="contact.html" class="nav-link">Kontakt</a></li>
         </ul>
       </nav>
 
-      <button class="mobile-toggle" id="mobile-toggle" aria-label="Toggle navigation" aria-expanded="false">
-        <span class="hamburger-line"></span>
-        <span class="hamburger-line"></span>
-        <span class="hamburger-line"></span>
-      </button>
+      <div class="header-actions">
+        <button class="cart-toggle" id="cart-toggle" aria-label="Korpa">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          <span class="cart-count" id="cart-count" hidden>0</span>
+        </button>
+
+        <button class="mobile-toggle" id="mobile-toggle" aria-label="Toggle navigation" aria-expanded="false">
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </button>
+      </div>
     </div>
   </header>
 
@@ -95,16 +102,15 @@
   <section class="hero" id="home">
     <div class="hero-overlay"></div>
     <div class="hero-content">
-      <p class="hero-tagline animate-on-scroll">Loznica, Srbija</p>
+      <p class="hero-tagline animate-on-scroll">Vinoteka &middot; Loznica</p>
       <h1 class="hero-title animate-on-scroll">
-        Vinoteka<br><span class="hero-accent">15 Milja</span>
+        Vino bira<br><span class="hero-accent">strpljive.</span>
       </h1>
       <p class="hero-description animate-on-scroll">
-        Otkrijte pažljivo odabranu kolekciju srpskih i svetskih vina u srcu Loznice.
+        Više od 400 pažljivo odabranih etiketa iz Srbije i sveta.
       </p>
       <div class="hero-cta animate-on-scroll">
-        <a href="#wines" class="btn btn-primary">Pogledaj vina</a>
-        <a href="#contact" class="btn btn-outline">Posetite nas</a>
+        <a href="#wines" class="btn btn-outline">Pogledaj ponudu</a>
       </div>
     </div>
     <div class="hero-scroll-indicator">
@@ -120,9 +126,8 @@
     <div class="container">
       <div class="intro-grid">
         <div class="intro-image animate-on-scroll">
-          <div class="intro-image-placeholder">
-            <span class="placeholder-icon">&#127815;</span>
-            <span class="placeholder-text">Wine Interior</span>
+          <div class="intro-image-photo">
+            <img src="images/logo/vinoteka2.JPG" alt="Vinoteka 15 Milja - ponuda" loading="lazy">
           </div>
           <div class="intro-image-accent"></div>
         </div>
@@ -139,7 +144,7 @@
           </p>
           <div class="intro-stats">
             <div class="stat">
-              <span class="stat-number">200+</span>
+              <span class="stat-number">400+</span>
               <span class="stat-label">Etiketa</span>
             </div>
             <div class="stat">
@@ -225,16 +230,12 @@
         </div>
 
         <div class="about-images animate-on-scroll">
-          <div class="about-image-main">
-            <div class="intro-image-placeholder">
-              <span class="placeholder-icon">&#127871;</span>
-              <span class="placeholder-text">Wine Cellar</span>
+          <div class="about-slideshow">
+            <div class="slide active">
+              <img src="images/logo/vinoteka1.jpg" alt="Vinoteka 15 Milja">
             </div>
-          </div>
-          <div class="about-image-secondary">
-            <div class="intro-image-placeholder">
-              <span class="placeholder-icon">&#127815;</span>
-              <span class="placeholder-text">Vineyard</span>
+            <div class="slide">
+              <img src="images/logo/vinoteka2.JPG" alt="Vinoteka 15 Milja">
             </div>
           </div>
         </div>
@@ -250,37 +251,69 @@
       <div class="section-header animate-on-scroll">
         <span class="section-label">Naša ponuda</span>
         <h2 class="section-title">Naša kolekcija</h2>
-        <p class="section-subtitle">Preko 350 pažljivo odabranih vina, rakija i delikatesa</p>
+        <p class="section-subtitle">Preko 400 pažljivo odabranih vina, rakija i delikatesa</p>
       </div>
 
-      <!-- Filter Tabs -->
-      <div class="wine-filters animate-on-scroll">
-        <button class="filter-btn active" data-filter="all">Sve</button>
-        <button class="filter-btn" data-filter="red">Crvena</button>
-        <button class="filter-btn" data-filter="white">Bela</button>
-        <button class="filter-btn" data-filter="rose">Roze</button>
-        <button class="filter-btn" data-filter="sparkling">Penušava</button>
-        <button class="filter-btn" data-filter="rakija">Rakije</button>
-        <button class="filter-btn" data-filter="spirits">Žestoko</button>
-        <button class="filter-btn" data-filter="delicacy">Delikatesi</button>
+      <!-- Search + mobilni toggle filtera -->
+      <div class="catalog-controls animate-on-scroll">
+        <div class="wine-search">
+          <input type="text" id="wine-search" placeholder="Pretraži po nazivu ili vinariji..." autocomplete="off">
+        </div>
+        <button class="mobile-filter-toggle" id="mobile-filter-toggle" aria-expanded="false" aria-controls="filters-panel">
+          Filteri
+        </button>
       </div>
 
-      <!-- Origin Toggle -->
-      <div class="origin-toggle animate-on-scroll">
-        <button class="origin-btn active" data-origin="all">Sve zemlje</button>
-        <button class="origin-btn" data-origin="rs">Srbija</button>
-        <button class="origin-btn" data-origin="hr">Hrvatska</button>
-        <button class="origin-btn" data-origin="ba">BiH</button>
-        <button class="origin-btn" data-origin="it">Italija</button>
-        <button class="origin-btn" data-origin="fr">Francuska</button>
-        <button class="origin-btn" data-origin="es">Španija</button>
-        <button class="origin-btn" data-origin="other">Ostale</button>
+      <!-- Filteri: na desktopu blok, na mobilnom bottom sheet -->
+      <div class="filters-overlay" id="filters-overlay"></div>
+      <div class="filters-panel" id="filters-panel">
+        <div class="filters-panel-head">
+          <span class="filters-panel-title">Filteri</span>
+          <button class="filters-close" id="filters-close" aria-label="Zatvori filtere">&times;</button>
+        </div>
+
+        <div class="filter-group-label">Vrsta</div>
+        <div class="wine-filters">
+          <button class="filter-btn active" data-filter="all">Sve</button>
+          <button class="filter-btn" data-filter="red">Crvena</button>
+          <button class="filter-btn" data-filter="white">Bela</button>
+          <button class="filter-btn" data-filter="rose">Roze</button>
+          <button class="filter-btn" data-filter="sparkling">Penušava</button>
+          <button class="filter-btn" data-filter="rakija">Rakije</button>
+          <button class="filter-btn" data-filter="spirits">Žestoko</button>
+          <button class="filter-btn" data-filter="delicacy">Delikatesi</button>
+        </div>
+
+        <div class="filter-group-label">Zemlja</div>
+        <div class="origin-toggle">
+          <button class="origin-btn active" data-origin="all">Sve zemlje</button>
+          <button class="origin-btn" data-origin="rs">Srbija</button>
+          <button class="origin-btn" data-origin="hr">Hrvatska</button>
+          <button class="origin-btn" data-origin="ba">BiH</button>
+          <button class="origin-btn" data-origin="it">Italija</button>
+          <button class="origin-btn" data-origin="fr">Francuska</button>
+          <button class="origin-btn" data-origin="es">Španija</button>
+          <button class="origin-btn" data-origin="cl">Chile</button>
+          <button class="origin-btn" data-origin="other">Ostale</button>
+        </div>
+
+        <div class="filter-group-label">Cena</div>
+        <div class="price-toggle">
+          <button class="price-btn active" data-price="all">Sve cene</button>
+          <button class="price-btn" data-price="0-1500">do 1.500</button>
+          <button class="price-btn" data-price="1500-3000">1.500&ndash;3.000</button>
+          <button class="price-btn" data-price="3000+">3.000+</button>
+          <button class="price-btn" data-price="inquiry">Na upit</button>
+        </div>
+
+        <div class="filters-panel-actions">
+          <button class="filters-reset" id="filters-reset">Poništi sve</button>
+          <button class="filters-apply" id="filters-apply">Prikaži rezultate</button>
+        </div>
       </div>
 
-      <!-- Search -->
-      <div class="wine-search animate-on-scroll">
-        <input type="text" id="wine-search" placeholder="Pretraži po nazivu ili vinariji..." autocomplete="off">
-      </div>
+      <!-- Aktivni filteri kao uklonjivi chipovi -->
+      <div class="active-chips" id="active-chips"></div>
 
       <!-- Count -->
       <div class="results-count" id="results-count"></div>
@@ -310,81 +343,6 @@
   </section>
 
   <!-- ============================================
-       CONTACT SECTION
-       ============================================ -->
-  <section class="contact" id="contact">
-    <div class="container">
-      <div class="section-header animate-on-scroll">
-        <span class="section-label">Kontakt</span>
-        <h2 class="section-title">Posetite nas</h2>
-        <p class="section-subtitle">Dođite i otkrijte svoj novi omiljeni vinski kutak u Loznici</p>
-      </div>
-
-      <div class="contact-grid">
-        <div class="contact-info animate-on-scroll">
-          <div class="contact-card">
-            <div class="contact-item">
-              <span class="contact-icon">&#128205;</span>
-              <div>
-                <h4>Adresa</h4>
-                <p>Žikice Jovanovića 9<br>15300 Loznica, Srbija</p>
-              </div>
-            </div>
-
-            <div class="contact-item">
-              <span class="contact-icon">&#128222;</span>
-              <div>
-                <h4>Telefon</h4>
-                <p><a href="tel:+38163367514">+381 63 367 514</a></p>
-              </div>
-            </div>
-
-            <div class="contact-item">
-              <span class="contact-icon">&#9993;</span>
-              <div>
-                <h4>Email</h4>
-                <p><a href="mailto:vinoteka15milja@gmail.com">vinoteka15milja@gmail.com</a></p>
-              </div>
-            </div>
-
-            <div class="contact-item">
-              <span class="contact-icon">&#128336;</span>
-              <div>
-                <h4>Radno vreme</h4>
-                <p>Pon &ndash; Pet: 09:00 &ndash; 20:00<br>
-                   Sub: 09:00 &ndash; 16:00<br>
-                   Ned: Zatvoreno</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="social-links">
-            <a href="#" class="social-link" aria-label="Instagram">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg>
-            </a>
-            <a href="#" class="social-link" aria-label="Facebook">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
-            </a>
-          </div>
-        </div>
-
-        <div class="contact-map animate-on-scroll">
-          <div class="map-container">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2844.2972906793007!2d19.221527377393045!3d44.52954507107398!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47596125639b5c3d%3A0x9b1f93393110b6b9!2sVinoteka%2015%20Milja!5e0!3m2!1sen!2srs!4v1770817012986!5m2!1sen!2srs"
-              width="100%"
-              height="100%"
-              style="border:0;"
-              allowfullscreen=""
-              loading="lazy"
-              referrerpolicy="no-referrer-when-downgrade">
-            </iframe>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============================================
        FOOTER
        ============================================ -->
   <footer class="site-footer">
@@ -403,7 +361,7 @@
             <li><a href="#home">Početna</a></li>
             <li><a href="#about">O nama</a></li>
             <li><a href="#wines">Vina</a></li>
-            <li><a href="#contact">Kontakt</a></li>
+            <li><a href="contact.html">Kontakt</a></li>
           </ul>
         </div>
 
@@ -419,8 +377,8 @@
 
         <div class="footer-contact">
           <h4>Kontakt</h4>
-          <p>Kneza Miloša bb<br>15300 Loznica, Srbija</p>
-          <p><a href="tel:+381151234567">+381 15 123 4567</a></p>
+          <p>Žikice Jovanovića 9<br>15300 Loznica, Srbija</p>
+          <p><a href="tel:+38163367514">+381 63 367 514</a></p>
         </div>
       </div>
 
@@ -436,7 +394,40 @@
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
   </button>
 
+  <!-- ============================================
+       CART SIDE PANEL
+       ============================================ -->
+  <div class="cart-overlay" id="cart-overlay"></div>
+  <aside class="cart-panel" id="cart-panel" aria-label="Korpa">
+    <div class="cart-head">
+      <span class="cart-title">Korpa</span>
+      <button class="cart-close" id="cart-close" aria-label="Zatvori korpu">&times;</button>
+    </div>
+    <div class="cart-items" id="cart-items"></div>
+    <div class="cart-foot" id="cart-foot">
+      <div class="cart-total-row">
+        <span>Ukupno</span>
+        <strong id="cart-total">0 RSD</strong>
+      </div>
+      <p class="cart-note">Plaćanje pouzećem &mdash; pri preuzimanju ili dostavi.</p>
+      <a href="checkout.html" class="btn btn-primary cart-checkout-btn">Poruči</a>
+      <button class="cart-continue" id="cart-continue">Nastavi kupovinu</button>
+    </div>
+  </aside>
+
+  <!-- ============================================
+       PRODUCT DETAIL MODAL (popunjava se JS-om)
+       ============================================ -->
+  <div class="product-modal-overlay" id="product-modal" hidden>
+    <div class="product-modal" role="dialog" aria-modal="true" aria-label="Detalji proizvoda">
+      <button class="product-modal-close" id="product-modal-close" aria-label="Zatvori">&times;</button>
+      <div class="product-modal-media" id="product-modal-media"></div>
+      <div class="product-modal-info" id="product-modal-info"></div>
+    </div>
+  </div>
+
   <script src="js/wines-data.js"></script>
+  <script src="js/cart.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>

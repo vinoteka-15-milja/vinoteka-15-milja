@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="sr" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Završite porudžbinu - Vinoteka 15 Milja, Loznica. Plaćanje pouzećem.">
+  <meta name="robots" content="noindex">
+  <meta name="author" content="Vinoteka 15 Milja">
+  <title>Porudžbina | Vinoteka 15 Milja</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ============================================
+       AGE VERIFICATION MODAL (18+)
+       ============================================ -->
+  <div class="age-gate-overlay" id="age-gate">
+    <div class="age-gate-modal">
+      <img src="images/logo/logo2.png" alt="Vinoteka 15 Milja" class="age-gate-logo-img">
+      <div class="age-gate-brand">
+        <span class="age-gate-name">Vinoteka</span>
+        <span class="age-gate-sub">15 Milja</span>
+      </div>
+      <h2 class="age-gate-title">Dobrodošli</h2>
+      <p class="age-gate-text">Ovaj sajt sadrži informacije o alkoholnim pićima.<br>Da li imate 18 ili više godina?</p>
+      <div class="age-gate-buttons">
+        <button class="age-gate-btn age-gate-yes" id="age-gate-yes">Da, imam 18+</button>
+        <button class="age-gate-btn age-gate-no" id="age-gate-no">Ne, nemam</button>
+      </div>
+      <p class="age-gate-note">Ulaskom na sajt potvrđujete da imate zakonski dozvoljene godine za kupovinu alkohola.</p>
+    </div>
+  </div>
+
+  <!-- ============================================
+       NAVIGATION
+       ============================================ -->
+  <header class="site-header scrolled" id="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">
+        <img src="images/logo/logo2.png" alt="Vinoteka 15 Milja" class="logo-img">
+        <div class="logo-text">
+          <span class="logo-name">Vinoteka</span>
+          <span class="logo-sub">15 Milja</span>
+        </div>
+      </a>
+
+      <nav class="main-nav" id="main-nav" aria-label="Main navigation">
+        <ul class="nav-list">
+          <li><a href="index.html#home" class="nav-link">Početna</a></li>
+          <li><a href="index.html#about" class="nav-link">O nama</a></li>
+          <li><a href="index.html#wines" class="nav-link">Vina</a></li>
+          <li><a href="contact.html" class="nav-link">Kontakt</a></li>
+        </ul>
+      </nav>
+
+      <button class="mobile-toggle" id="mobile-toggle" aria-label="Toggle navigation" aria-expanded="false">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ============================================
+       CHECKOUT
+       ============================================ -->
+  <section class="checkout-section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label">Porudžbina</span>
+        <h2 class="section-title">Završite porudžbinu</h2>
+        <p class="section-subtitle">Plaćanje pouzećem &mdash; pri preuzimanju u vinoteci ili dostavi</p>
+      </div>
+
+      <!-- Prazna korpa -->
+      <div class="checkout-empty" id="checkout-empty" hidden>
+        <span class="cart-empty-icon">&#127863;</span>
+        <p>Vaša korpa je prazna.</p>
+        <a href="index.html#wines" class="btn btn-secondary">Pogledaj ponudu</a>
+      </div>
+
+      <!-- Potvrda uspešne porudžbine -->
+      <div class="checkout-success" id="checkout-success" hidden>
+        <div class="success-icon">&#10003;</div>
+        <h3>Porudžbina je primljena!</h3>
+        <p>Hvala vam na poverenju. Kontaktiraćemo vas u najkraćem roku radi potvrde.<br>
+           Plaćanje je pouzećem &mdash; pri preuzimanju ili dostavi.</p>
+        <a href="index.html" class="btn btn-secondary">Nazad na početnu</a>
+      </div>
+
+      <!-- Glavni sadržaj -->
+      <div class="checkout-grid" id="checkout-grid">
+        <form class="checkout-form" id="checkout-form" novalidate>
+          <h3 class="checkout-block-title">Vaši podaci</h3>
+
+          <div class="form-field">
+            <label for="co-name">Ime i prezime <span class="req">*</span></label>
+            <input type="text" id="co-name" name="name" autocomplete="name" required>
+            <span class="field-error" id="err-name" hidden>Unesite ime i prezime.</span>
+          </div>
+
+          <div class="form-field">
+            <label for="co-phone">Telefon <span class="req">*</span></label>
+            <input type="tel" id="co-phone" name="phone" autocomplete="tel" placeholder="06x xxx xxxx" required>
+            <span class="field-error" id="err-phone" hidden>Unesite ispravan broj telefona.</span>
+          </div>
+
+          <div class="form-field">
+            <label for="co-email">Email <span class="optional">(opciono)</span></label>
+            <input type="email" id="co-email" name="email" autocomplete="email">
+            <span class="field-error" id="err-email" hidden>Email adresa nije ispravna.</span>
+          </div>
+
+          <h3 class="checkout-block-title">Način preuzimanja</h3>
+
+          <div class="delivery-options">
+            <label class="delivery-option">
+              <input type="radio" name="delivery" value="pickup" checked>
+              <span class="delivery-option-box">
+                <strong>Preuzimanje u vinoteci</strong>
+                <small>Žikice Jovanovića 9, Loznica</small>
+              </span>
+            </label>
+            <label class="delivery-option">
+              <input type="radio" name="delivery" value="delivery">
+              <span class="delivery-option-box">
+                <strong>Dostava na adresu</strong>
+                <small>Dogovor oko dostave telefonom</small>
+              </span>
+            </label>
+          </div>
+
+          <div class="form-field" id="address-field" hidden>
+            <label for="co-address">Adresa za dostavu <span class="req">*</span></label>
+            <input type="text" id="co-address" name="address" autocomplete="street-address" placeholder="Ulica i broj, mesto">
+            <span class="field-error" id="err-address" hidden>Unesite adresu za dostavu.</span>
+          </div>
+
+          <div class="form-field">
+            <label for="co-note">Napomena <span class="optional">(opciono)</span></label>
+            <textarea id="co-note" name="note" rows="3"></textarea>
+          </div>
+
+          <!-- Honeypot za botove -->
+          <input type="checkbox" name="botcheck" id="co-botcheck" class="hp-field" tabindex="-1" autocomplete="off">
+
+          <div class="checkout-error" id="checkout-error" hidden>
+            Slanje porudžbine nije uspelo. Pokušajte ponovo ili nas pozovite:
+            <a href="tel:+38163367514">+381 63 367 514</a>
+          </div>
+
+          <button type="submit" class="btn btn-primary checkout-submit" id="checkout-submit">
+            Pošalji porudžbinu
+          </button>
+        </form>
+
+        <aside class="checkout-summary">
+          <h3 class="checkout-block-title">Vaša korpa</h3>
+          <div class="summary-items" id="summary-items"></div>
+          <div class="summary-total">
+            <span>Ukupno</span>
+            <strong id="summary-total">0 RSD</strong>
+          </div>
+          <p class="cart-note">Cene su informativne. Konačan iznos potvrđujemo pri kontaktu.</p>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <script src="js/wines-data.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/checkout.js"></script>
+</body>
+</html>
