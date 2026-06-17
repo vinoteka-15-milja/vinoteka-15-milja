@@ -66,7 +66,10 @@ Statički sajt + webshop (porudžbine pouzećem) za vinoteku "15 Milja" iz Lozni
 - **Hosting:** cPanel (ContraTeam, "Junior SSD"), server IP `88.198.1.66`, nalog `miljacom`, sajt u `public_html`.
 - **Domen:** `15milja.com` registrovan na Namecheap.
 - **Auto-deploy:** GitHub Action `.github/workflows/deploy.yml` — svaki **push na `main`** automatski uploaduje izmene na cPanel preko FTP-a (SamKirkland/FTP-Deploy-Action). Prvi pun upload urađen 2026-06-17. FTP lozinka je GitHub Secret `FTP_PASSWORD` (nije u kodu).
-- **Tok rada:** push na `main` = live. (`dev` se drži u sinhronu kao staging.)
+- **Tok rada / model grana (od 2026-06-17):** main i dev su NAMERNO različiti.
+  - `main` → **15milja.com** = javni "Sajt u izradi" overlay (under-construction blok u `index.html` je AKTIVAN). Pun katalog je u kodu ali skriven overlayem.
+  - `dev` → **dev.15milja.com** (zaključan lozinkom) = pun shop na kome se radi (under-construction blok ZAKOMENTARISAN).
+  - NE merge-ovati main↔dev dok traje "u izradi" režim (overlay bi se prepisao). Za LANSIRANJE: zakomentarisati overlay u `index.html` na main (ili prebaciti dev verziju index.html) → 15milja.com postaje pun shop.
 - **DNS:** domen treba upereti na cPanel — promeniti nameservere na Namecheap-u na `dolf.dnsserve.rs` / `dolf2.dnsserve.rs` (ili A record `@`+`www` → `88.198.1.66`). Dok to ne uradiš, domen pokazuje na stari Vercel.
 - **HTTPS:** posle propagacije DNS-a pokrenuti AutoSSL u cPanel-u (SSL/TLS Status).
 - **Vercel:** stari hosting — ukloniti domen sa Vercel projekta posle potvrde da cPanel radi.
