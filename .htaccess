@@ -2,3 +2,15 @@
 RewriteEngine On
 RewriteCond %{HTTPS} !=on
 RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Lozinka SAMO za dev.15milja.com — produkcija (15milja.com / www) ostaje otvorena.
+# Fajl sa lozinkom je van public_html, pa ga auto-deploy ne dira.
+SetEnvIfNoCase Host dev\.15milja\.com TRAZI_LOZINKU
+AuthType Basic
+AuthName "Dev sajt — pristup ograničen"
+AuthUserFile /home/miljacom/.htpasswd-dev
+Require valid-user
+Order allow,deny
+Allow from all
+Deny from env=TRAZI_LOZINKU
+Satisfy any
