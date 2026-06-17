@@ -61,12 +61,15 @@ Statički sajt + webshop (porudžbine pouzećem) za vinoteku "15 Milja" iz Lozni
 
 ---
 
-## 5. Hosting (preporuka)
+## 5. Hosting i deploy (AKTIVNO)
 
-Za trenutni statički sajt: **Cloudflare Pages** (besplatno, neograničen bandwidth, jak EU CDN — bitno zbog ~90MB slika). Alternative: Netlify (lak, 100GB/mes limit), GitHub Pages (najjednostavnije jer je repo na GitHubu).
-Hosting servira `main` granu — sve je trenutno na `dev`; za produkciju spojiti `dev` → `main`.
-
-Domen: `.rs` preko RNIDS registrara (Loopia, Webglobe…), `.com` može direktno preko Cloudflare.
+- **Hosting:** cPanel (ContraTeam, "Junior SSD"), server IP `88.198.1.66`, nalog `miljacom`, sajt u `public_html`.
+- **Domen:** `15milja.com` registrovan na Namecheap.
+- **Auto-deploy:** GitHub Action `.github/workflows/deploy.yml` — svaki **push na `main`** automatski uploaduje izmene na cPanel preko FTP-a (SamKirkland/FTP-Deploy-Action). Prvi pun upload urađen 2026-06-17. FTP lozinka je GitHub Secret `FTP_PASSWORD` (nije u kodu).
+- **Tok rada:** push na `main` = live. (`dev` se drži u sinhronu kao staging.)
+- **DNS:** domen treba upereti na cPanel — promeniti nameservere na Namecheap-u na `dolf.dnsserve.rs` / `dolf2.dnsserve.rs` (ili A record `@`+`www` → `88.198.1.66`). Dok to ne uradiš, domen pokazuje na stari Vercel.
+- **HTTPS:** posle propagacije DNS-a pokrenuti AutoSSL u cPanel-u (SSL/TLS Status).
+- **Vercel:** stari hosting — ukloniti domen sa Vercel projekta posle potvrde da cPanel radi.
 
 ---
 
