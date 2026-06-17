@@ -70,6 +70,7 @@ Statički sajt + webshop (porudžbine pouzećem) za vinoteku "15 Milja" iz Lozni
 - **DNS:** domen treba upereti na cPanel — promeniti nameservere na Namecheap-u na `dolf.dnsserve.rs` / `dolf2.dnsserve.rs` (ili A record `@`+`www` → `88.198.1.66`). Dok to ne uradiš, domen pokazuje na stari Vercel.
 - **HTTPS:** posle propagacije DNS-a pokrenuti AutoSSL u cPanel-u (SSL/TLS Status).
 - **Vercel:** stari hosting — ukloniti domen sa Vercel projekta posle potvrde da cPanel radi.
+- **HTTPS redirekcija + dev zaključavanje:** `.htaccess` (u gitu) forsira https i traži Basic Auth **samo za `dev.15milja.com`** (produkcija otvorena). Fajl sa lozinkom je `/home/miljacom/.htpasswd-dev` — VAN `public_html`, da ga auto-deploy ne pregazi. Promena lozinke: regenerisati `.htpasswd-dev` (`openssl passwd -apr1`) i uploadovati preko FTP-a na isto mesto.
 
 ---
 
