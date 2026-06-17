@@ -1,11 +1,11 @@
 name: Deploy na cPanel (15milja.com)
 
-# Svaki push na main → automatski upload na cPanel preko FTP-a.
-# Prvi put uploaduje ceo sajt; kasnije šalje samo izmenjene fajlove.
+# push na main → glavni sajt (public_html)
+# push na dev  → dev podsajt (public_html/dev)  = dev.15milja.com
 on:
   push:
-    branches: [ main ]
-  workflow_dispatch:        # ručno pokretanje iz GitHub Actions taba
+    branches: [ main, dev ]
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -14,14 +14,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: FTP upload na public_html
+      - name: Odredi ciljni folder po grani
+        id: target
+        run: |
+          if [ "${{ github.ref_name }}" = "main" ]; then
+            echo "dir=public_html/" >> "$GITHUB_OUTPUT"
+          else
+            echo "dir=public_html/dev/" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: FTP upload
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: 88.198.1.66
           username: miljacom
           password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: public_html/
-          # Idu samo fajlovi sajta — sve ostalo (kod-alati, dokumentacija) se preskače
+          server-dir: ${{ steps.target.outputs.dir }}
           exclude: |
             **/.git*
             **/.git*/**
