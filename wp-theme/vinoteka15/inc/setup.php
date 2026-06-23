@@ -12,6 +12,9 @@ function v15_run_setup_migrations() {
     v15_setup_classic_pages();
     v15_setup_cod();
     v15_setup_local_pickup();
+    v15_setup_pages();
+    v15_setup_nav_menu();
+    v15_cleanup_defaults();
 }
 
 /** /cart/ i /checkout/ sa blokova na klasik shortcode (idempotentno). */
@@ -76,4 +79,86 @@ function v15_setup_local_pickup() {
         $zone->save();
     }
     update_option('v15_shipping_setup', 'done');
+}
+
+/** Strane O nama i Kontakt (idempotentno). */
+function v15_setup_pages() {
+    if (get_option('v15_pages_setup') === 'done') return;
+
+    if (!get_page_by_path('o-nama')) {
+        wp_insert_post(array(
+            'post_title'   => 'O nama',
+            'post_name'    => 'o-nama',
+            'post_status'  => 'publish',
+            'post_type'    => 'page',
+            'post_content' =>
+                "<p>Vinoteka 15 Milja je vaš vinski kutak u srcu Loznice — mesto gde svaka boca priča svoju priču. "
+              . "Od najfinijih srpskih sorti do pažljivo odabranih svetskih etiketa, naša kolekcija je kreirana za prave ljubitelje vina.</p>\n"
+              . "<p>Verujemo da dobro vino spaja ljude i čini svaki trenutak posebnim. Svratite, posavetujte se sa nama i pronađite svoju sledeću omiljenu flašu.</p>",
+        ));
+    }
+
+    if (!get_page_by_path('kontakt')) {
+        $map = '<iframe src="https://maps.google.com/maps?q=' . rawurlencode('Žikice Jovanovića 9, Loznica') . '&output=embed" '
+             . 'width="100%" height="360" style="border:0;border-radius:12px" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>';
+        $content =
+            "<p><strong>Adresa:</strong> Žikice Jovanovića 9, 15300 Loznica</p>\n"
+          . "<p><strong>Telefon:</strong> <a href=\"tel:+38163367514\">+381 63 367 514</a></p>\n"
+          . "<p><strong>Email:</strong> <a href=\"mailto:vinoteka15milja@gmail.com\">vinoteka15milja@gmail.com</a></p>\n"
+          . "<p><strong>Radno vreme:</strong> Pon–Pet 09–20h · Sub 09–15h · Ned: zatvoreno</p>\n"
+          . $map;
+        wp_insert_post(array(
+            'post_title'   => 'Kontakt',
+            'post_name'    => 'kontakt',
+            'post_status'  => 'publish',
+            'post_type'    => 'page',
+            'post_content' => $content,
+        ));
+    }
+
+    update_option('v15_pages_setup', 'done');
+}
+
+/** Editabilan primary meni „Glavni meni" (idempotentno). Pozvati POSLE v15_setup_pages. */
+function v15_setup_nav_menu() {
+    if (get_option('v15_nav_setup') === 'done') return;
+    $name = 'Glavni meni';
+    if (!wp_get_nav_menu_object($name)) {
+        $menu_id = wp_create_nav_menu($name);
+        if (!is_wp_error($menu_id)) {
+            wp_update_nav_menu_item($menu_id, 0, array(
+                'menu-item-title' => 'Početna', 'menu-item-url' => home_url('/'),
+                'menu-item-type' => 'custom', 'menu-item-status' => 'publish',
+            ));
+            wp_update_nav_menu_item($menu_id, 0, array(
+                'menu-item-title' => 'Vina', 'menu-item-url' => wc_get_page_permalink('shop'),
+                'menu-item-type' => 'custom', 'menu-item-status' => 'publish',
+            ));
+            $onama = get_page_by_path('o-nama');
+            if ($onama) wp_update_nav_menu_item($menu_id, 0, array(
+                'menu-item-title' => 'O nama', 'menu-item-type' => 'post_type',
+                'menu-item-object' => 'page', 'menu-item-object-id' => $onama->ID, 'menu-item-status' => 'publish',
+            ));
+            $kontakt = get_page_by_path('kontakt');
+            if ($kontakt) wp_update_nav_menu_item($menu_id, 0, array(
+                'menu-item-title' => 'Kontakt', 'menu-item-type' => 'post_type',
+                'menu-item-object' => 'page', 'menu-item-object-id' => $kontakt->ID, 'menu-item-status' => 'publish',
+            ));
+            $locations = get_theme_mod('nav_menu_locations');
+            if (!is_array($locations)) $locations = array();
+            $locations['primary'] = $menu_id;
+            set_theme_mod('nav_menu_locations', $locations);
+        }
+    }
+    update_option('v15_nav_setup', 'done');
+}
+
+/** Obriši default WP sadržaj: Sample Page + Hello world! (idempotentno, u trash). */
+function v15_cleanup_defaults() {
+    if (get_option('v15_defaults_cleaned') === 'done') return;
+    $sp = get_page_by_path('sample-page');
+    if ($sp && $sp->post_status !== 'trash') wp_trash_post($sp->ID);
+    $hw = get_posts(array('name' => 'hello-world', 'post_type' => 'post', 'post_status' => 'any', 'numberposts' => 1));
+    if (!empty($hw)) wp_trash_post($hw[0]->ID);
+    update_option('v15_defaults_cleaned', 'done');
 }
