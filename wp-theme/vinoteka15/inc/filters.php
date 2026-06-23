@@ -19,16 +19,21 @@ function v15_csv_toggle($csv, $value) {
     return implode(',', $parts);
 }
 
+/** Price bucket-i: ključ => [label, params]. Jedini izvor istine. */
+function v15_price_buckets() {
+    return array(
+        'do-1500'   => array('label' => 'do 1.500',    'params' => array('max_price' => '1500')),
+        '1500-3000' => array('label' => '1.500–3.000', 'params' => array('min_price' => '1500', 'max_price' => '3000')),
+        '3000+'     => array('label' => '3.000+',       'params' => array('min_price' => '3000')),
+    );
+}
+
 /**
  * Mapiraj price-bucket ključ na WooCommerce price query args. Čista funkcija.
  */
 function v15_price_params($bucket) {
-    switch ($bucket) {
-        case 'do-1500':   return ['max_price' => '1500'];
-        case '1500-3000': return ['min_price' => '1500', 'max_price' => '3000'];
-        case '3000+':     return ['min_price' => '3000'];
-        default:          return [];
-    }
+    $buckets = v15_price_buckets();
+    return isset($buckets[$bucket]) ? $buckets[$bucket]['params'] : array();
 }
 
 /** Bazni shop URL (bez query-ja). */
@@ -46,14 +51,7 @@ function v15_current_args() {
     return $args;
 }
 
-/** Da li je slug izabran u datom filter varu. */
-function v15_is_selected($var, $slug) {
-    if (empty($_GET[$var])) return false;
-    $vals = array_map('trim', explode(',', wp_unslash($_GET[$var])));
-    return in_array($slug, $vals, true);
-}
-
-/** URL sa toggle-ovanim atribut-terminom (multi, OR). */
+/** URL sa toggle-ovanim atribut-terminom (multi, OR). Vraća RAW URL (bez esc_url). */
 function v15_attr_toggle_url($filter_var, $qtype_var, $slug) {
     $current = isset($_GET[$filter_var]) ? wp_unslash($_GET[$filter_var]) : '';
     $next = v15_csv_toggle($current, $slug);
@@ -65,10 +63,10 @@ function v15_attr_toggle_url($filter_var, $qtype_var, $slug) {
         $args[$filter_var] = $next;
         $args[$qtype_var]  = 'or';
     }
-    return esc_url(add_query_arg($args, v15_shop_base_url()));
+    return add_query_arg($args, v15_shop_base_url());
 }
 
-/** URL koji postavlja/skida single var (npr. product_cat). $slug='' => skini. */
+/** URL koji postavlja/skida single var (npr. product_cat). $slug='' => skini. Vraća RAW URL (bez esc_url). */
 function v15_single_url($var, $slug) {
     $args = v15_current_args();
     unset($args['paged']);
@@ -77,17 +75,17 @@ function v15_single_url($var, $slug) {
     } else {
         $args[$var] = $slug;
     }
-    return esc_url(add_query_arg($args, v15_shop_base_url()));
+    return add_query_arg($args, v15_shop_base_url());
 }
 
-/** URL za price bucket (resetuje prethodni min/max). */
+/** URL za price bucket (resetuje prethodni min/max). Vraća RAW URL (bez esc_url). */
 function v15_price_url($bucket) {
     $args = v15_current_args();
     unset($args['paged'], $args['min_price'], $args['max_price']);
     foreach (v15_price_params($bucket) as $k => $v) {
         $args[$k] = $v;
     }
-    return esc_url(add_query_arg($args, v15_shop_base_url()));
+    return add_query_arg($args, v15_shop_base_url());
 }
 
 /** Koji price bucket je trenutno aktivan (za .active stanje). */
@@ -95,9 +93,11 @@ function v15_active_price_bucket() {
     $min = isset($_GET['min_price']) ? (string) wp_unslash($_GET['min_price']) : '';
     $max = isset($_GET['max_price']) ? (string) wp_unslash($_GET['max_price']) : '';
     if ($min === '' && $max === '') return 'all';
-    if ($min === '' && $max === '1500') return 'do-1500';
-    if ($min === '1500' && $max === '3000') return '1500-3000';
-    if ($min === '3000' && $max === '') return '3000+';
+    foreach (v15_price_buckets() as $key => $b) {
+        $bmin = isset($b['params']['min_price']) ? $b['params']['min_price'] : '';
+        $bmax = isset($b['params']['max_price']) ? $b['params']['max_price'] : '';
+        if ($bmin === $min && $bmax === $max) return $key;
+    }
     return ''; // custom raspon (npr. iz druge sesije) — nijedan bucket nije „active"
 }
 
@@ -105,6 +105,15 @@ function v15_active_price_bucket() {
 function v15_term_name($taxonomy, $slug) {
     $t = get_term_by('slug', $slug, $taxonomy);
     return $t ? $t->name : $slug;
+}
+
+/** Atribut-filteri (jedini izvor istine za render i chipove). */
+function v15_filter_attributes() {
+    return array(
+        array('label' => 'Zemlja',   'taxonomy' => 'pa_zemlja',   'filter_var' => 'filter_zemlja',   'qtype_var' => 'query_type_zemlja',   'searchable' => false),
+        array('label' => 'Region',   'taxonomy' => 'pa_region',   'filter_var' => 'filter_region',   'qtype_var' => 'query_type_region',   'searchable' => true),
+        array('label' => 'Vinarija', 'taxonomy' => 'pa_vinarija', 'filter_var' => 'filter_vinarija', 'qtype_var' => 'query_type_vinarija', 'searchable' => true),
+    );
 }
 
 /** Render jednog atribut-dropdowna (Zemlja/Region/Vinarija). */
@@ -131,7 +140,7 @@ function v15_render_attr_dropdown($label, $taxonomy, $filter_var, $qtype_var, $s
           <?php foreach ($terms as $t) :
               $is = in_array($t->slug, $selected, true); ?>
             <a class="filter-term <?php echo $is ? 'active' : ''; ?>"
-               href="<?php echo v15_attr_toggle_url($filter_var, $qtype_var, $t->slug); ?>"
+               href="<?php echo esc_url(v15_attr_toggle_url($filter_var, $qtype_var, $t->slug)); ?>"
                rel="nofollow"
                data-name="<?php echo esc_attr(mb_strtolower($t->name)); ?>">
               <span class="filter-term-box" aria-hidden="true"></span>
@@ -152,10 +161,10 @@ function v15_render_category_pills() {
     ?>
     <div class="filter-group-label">Vrsta</div>
     <div class="wine-filters">
-      <a class="filter-btn <?php echo $cur === '' ? 'active' : ''; ?>" href="<?php echo v15_single_url('product_cat', ''); ?>" rel="nofollow">Sve</a>
+      <a class="filter-btn <?php echo $cur === '' ? 'active' : ''; ?>" href="<?php echo esc_url(v15_single_url('product_cat', '')); ?>" rel="nofollow">Sve</a>
       <?php foreach ($terms as $t) : ?>
         <a class="filter-btn <?php echo $cur === $t->slug ? 'active' : ''; ?>"
-           href="<?php echo v15_single_url('product_cat', $t->slug); ?>" rel="nofollow"><?php echo esc_html($t->name); ?></a>
+           href="<?php echo esc_url(v15_single_url('product_cat', $t->slug)); ?>" rel="nofollow"><?php echo esc_html($t->name); ?></a>
       <?php endforeach; ?>
     </div>
     <?php
@@ -164,18 +173,13 @@ function v15_render_category_pills() {
 /** Render reda Cena-pilula. */
 function v15_render_price_pills() {
     $active = v15_active_price_bucket();
-    $buckets = array(
-        'all'       => 'Sve cene',
-        'do-1500'   => 'do 1.500',
-        '1500-3000' => '1.500–3.000',
-        '3000+'     => '3.000+',
-    );
     ?>
     <div class="filter-group-label">Cena</div>
     <div class="price-toggle">
-      <?php foreach ($buckets as $key => $lbl) : ?>
+      <a class="price-btn <?php echo $active === 'all' ? 'active' : ''; ?>" href="<?php echo esc_url(v15_price_url('all')); ?>" rel="nofollow">Sve cene</a>
+      <?php foreach (v15_price_buckets() as $key => $b) : ?>
         <a class="price-btn <?php echo $active === $key ? 'active' : ''; ?>"
-           href="<?php echo v15_price_url($key); ?>" rel="nofollow"><?php echo esc_html($lbl); ?></a>
+           href="<?php echo esc_url(v15_price_url($key)); ?>" rel="nofollow"><?php echo esc_html($b['label']); ?></a>
       <?php endforeach; ?>
     </div>
     <?php
@@ -183,39 +187,35 @@ function v15_render_price_pills() {
 
 /** Render aktivnih chipova (uklonjivi). */
 function v15_render_chips() {
-    $chips = array(); // [label, url-bez-tog-filtera]
+    $chips = array(); // [label, raw-url-bez-tog-filtera]
 
     if (!empty($_GET['product_cat'])) {
         $slug = wp_unslash($_GET['product_cat']);
         $chips[] = array(v15_term_name('product_cat', $slug), v15_single_url('product_cat', ''));
     }
-    $attr_map = array(
-        'filter_zemlja'   => array('pa_zemlja', 'query_type_zemlja'),
-        'filter_region'   => array('pa_region', 'query_type_region'),
-        'filter_vinarija' => array('pa_vinarija', 'query_type_vinarija'),
-    );
-    foreach ($attr_map as $fvar => $info) {
+    foreach (v15_filter_attributes() as $a) {
+        $fvar = $a['filter_var'];
         if (empty($_GET[$fvar])) continue;
         $slugs = array_filter(array_map('trim', explode(',', wp_unslash($_GET[$fvar]))), 'strlen');
         foreach ($slugs as $slug) {
-            $chips[] = array(v15_term_name($info[0], $slug), v15_attr_toggle_url($fvar, $info[1], $slug));
+            $chips[] = array(v15_term_name($a['taxonomy'], $slug), v15_attr_toggle_url($fvar, $a['qtype_var'], $slug));
         }
     }
     $pb = v15_active_price_bucket();
     if ($pb !== 'all' && $pb !== '') {
-        $labels = array('do-1500' => 'do 1.500', '1500-3000' => '1.500–3.000', '3000+' => '3.000+');
-        $chips[] = array($labels[$pb], v15_price_url('all'));
+        $buckets = v15_price_buckets();
+        $chips[] = array($buckets[$pb]['label'], v15_price_url('all'));
     }
     if (!empty($_GET['s'])) {
         $args = v15_current_args(); unset($args['s'], $args['paged']);
-        $chips[] = array('„' . wp_unslash($_GET['s']) . '"', esc_url(add_query_arg($args, v15_shop_base_url())));
+        $chips[] = array('„' . wp_unslash($_GET['s']) . '"', add_query_arg($args, v15_shop_base_url()));
     }
 
     if (empty($chips)) return;
     ?>
     <div class="active-chips">
       <?php foreach ($chips as $c) : ?>
-        <a class="active-chip" href="<?php echo $c[1]; ?>" rel="nofollow"><?php echo esc_html($c[0]); ?> <span class="chip-x" aria-hidden="true">×</span></a>
+        <a class="active-chip" href="<?php echo esc_url($c[1]); ?>" rel="nofollow"><?php echo esc_html($c[0]); ?> <span class="chip-x" aria-hidden="true">×</span></a>
       <?php endforeach; ?>
       <a class="active-chip chip-clear" href="<?php echo esc_url(v15_shop_base_url()); ?>" rel="nofollow">Poništi sve</a>
     </div>
@@ -230,6 +230,14 @@ function v15_render_filters() {
         <input type="text" name="s" value="<?php echo isset($_GET['s']) ? esc_attr(wp_unslash($_GET['s'])) : ''; ?>"
                placeholder="Pretraži po nazivu ili vinariji…" autocomplete="off">
         <input type="hidden" name="post_type" value="product">
+        <?php
+        // Sačuvaj aktivne filtere pri pretrazi (inače bi pretraga obrisala izbor)
+        $keep = v15_current_args();
+        unset($keep['s'], $keep['paged'], $keep['post_type']);
+        foreach ($keep as $k => $v) {
+            echo '<input type="hidden" name="' . esc_attr($k) . '" value="' . esc_attr($v) . '">';
+        }
+        ?>
       </form>
       <button class="mobile-filter-toggle" id="mobile-filter-toggle" type="button" aria-expanded="false" aria-controls="filters-panel">Filteri</button>
     </div>
@@ -245,11 +253,9 @@ function v15_render_filters() {
 
       <div class="filter-group-label">Poreklo</div>
       <div class="filter-dropdowns">
-        <?php
-        v15_render_attr_dropdown('Zemlja', 'pa_zemlja', 'filter_zemlja', 'query_type_zemlja', false);
-        v15_render_attr_dropdown('Region', 'pa_region', 'filter_region', 'query_type_region', true);
-        v15_render_attr_dropdown('Vinarija', 'pa_vinarija', 'filter_vinarija', 'query_type_vinarija', true);
-        ?>
+        <?php foreach (v15_filter_attributes() as $a) {
+            v15_render_attr_dropdown($a['label'], $a['taxonomy'], $a['filter_var'], $a['qtype_var'], $a['searchable']);
+        } ?>
       </div>
 
       <?php v15_render_price_pills(); ?>
