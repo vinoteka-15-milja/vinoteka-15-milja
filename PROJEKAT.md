@@ -31,7 +31,7 @@ _Poslednje ažuriranje: 2026-06-23_
 
 **Sledeći koraci (Faza 2/3 ostatak):**
 1. Stranica pojedinačnog proizvoda + **korpa/checkout** u našem stilu + test porudžbine
-2. ~~Globalni atributi → filteri~~ **URAĐENO (2026-06-23):** filter traka iznad shop grida (Vrsta/Zemlja/Region/Vinarija/Cena + pretraga), native WC layered nav, server-render toggle linkovi + chipovi + mobilni drawer. Kod: `wp-theme/vinoteka15/inc/filters.php` (+hook u `functions.php`, CSS u `woo.css`, JS u `theme.js`). Spec/plan: `docs/superpowers/{specs,plans}/2026-06-23-woo-katalog-filteri*.md`. Svesno van v1: „Na upit" cena bucket i AJAX (reload je dovoljan).
+2. ~~Globalni atributi → filteri~~ **URAĐENO (2026-06-23):** filter traka iznad shop grida (Vrsta/Zemlja/Region/Vinarija/Cena + pretraga), native WC layered nav, server-render toggle linkovi + chipovi + mobilni drawer. Kod: `wp-theme/vinoteka15/inc/filters.php` (+hook u `functions.php`, CSS u `woo.css`, JS u `theme.js`). Spec/plan: `docs/superpowers/{specs,plans}/2026-06-23-woo-katalog-filteri*.md`. AJAX instant filtriranje **dodato** (bez reload-a: fetch + zamena `.wines-section`, pushState/back, drawer ostaje otvoren). Dropdownovi u pill stilu, kaskadno sužavanje (Zemlja→Region/Vinarija), samo jedan dropdown otvoren. Svesno van obima ostaje samo „Na upit" cena bucket.
 3. Meni: izbaciti "Sample Page"/"Hello world", postaviti Početna/Vina/O nama/Kontakt; logo u header (trenutno gold grozd `logo.png`)
 4. Vratiti **brendiran age gate** (18+)
 5. **Faza 3:** plaćanje (pouzeće COD + uplata na račun BACS), dostava po težini (Flexible Shipping, zona Srbija + lično preuzimanje), pravne stranice (impressum/PIB/MB, uslovi, reklamacije, privatnost)

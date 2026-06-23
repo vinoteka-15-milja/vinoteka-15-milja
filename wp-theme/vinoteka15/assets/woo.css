@@ -195,6 +195,9 @@ details.filter-dropdown { position: relative; }
 }
 .filter-term.active .filter-term-name { color: var(--clr-gold); }
 
+/* AJAX učitavanje — blago zatamni grid dok stižu rezultati (bez reload-a) */
+.wines-section.v15-loading { opacity: .5; pointer-events: none; transition: opacity .12s ease; }
+
 /* Na mobilnom (drawer) dropdownovi su uvek otvoreni i puni širine */
 @media (max-width: 767px) {
   details.filter-dropdown[open] .filter-dropdown-panel,
