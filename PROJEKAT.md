@@ -24,14 +24,14 @@ _Poslednje ažuriranje: 2026-06-23_
 - Tema je **standalone** (NE Blocksy child) — pri promenama aktivacije paziti da `template` ostane `vinoteka15` (ranije zaglavio na `blocksy`; rešeno prebacivanjem na Blocksy pa nazad).
 
 **Stanje (urađeno):**
-- 404 proizvoda uvezeno u WooCommerce (slike, cene, 8 kategorija). Atributi Vinarija/Region/Zemlja/Zapremina ušli kao **custom** (NE globalni) — za filtere treba prebaciti na globalne.
+- 404 proizvoda uvezeno u WooCommerce (slike, cene, 8 kategorija). Atributi Vinarija/Region/Zemlja/Zapremina su **globalni** (`pa_vinarija`/`pa_region`/`pa_zemlja`/`pa_zapremina`, popunjeni: 132/55/14/3) i proizvodi su im dodeljeni — native layered-nav filtriranje radi.
 - Plugin-ovi: aktivni **WooCommerce, LiteSpeed Cache, Flexible Shipping**. Deaktivirani: **Age Gate** (privremeno, vratiti brendiran), + očišćen bloat (Jetpack/Google/Pinterest/Reddit/Snapchat/MailPoet/PayPal).
 - Tema `vinoteka15` aktivna; početna (hero+featured), shop (naše tamne kartice, "U KORPU", "RSD"), logo 52px, paginacija stilizovana.
 - WooCommerce **"Coming soon"** režim je ON (gost vidi coming-soon; ulogovan vidi pravi sajt). Prebaciti na **Live** pred lansiranje (React toggle u WC→Settings→Site visibility; nije išlo kroz automatizaciju, ručno).
 
 **Sledeći koraci (Faza 2/3 ostatak):**
 1. Stranica pojedinačnog proizvoda + **korpa/checkout** u našem stilu + test porudžbine
-2. Globalni atributi (zamena custom) → filteri po zemlji/regionu/vinariji/zapremini
+2. ~~Globalni atributi → filteri~~ **URAĐENO (2026-06-23):** filter traka iznad shop grida (Vrsta/Zemlja/Region/Vinarija/Cena + pretraga), native WC layered nav, server-render toggle linkovi + chipovi + mobilni drawer. Kod: `wp-theme/vinoteka15/inc/filters.php` (+hook u `functions.php`, CSS u `woo.css`, JS u `theme.js`). Spec/plan: `docs/superpowers/{specs,plans}/2026-06-23-woo-katalog-filteri*.md`. Svesno van v1: „Na upit" cena bucket i AJAX (reload je dovoljan).
 3. Meni: izbaciti "Sample Page"/"Hello world", postaviti Početna/Vina/O nama/Kontakt; logo u header (trenutno gold grozd `logo.png`)
 4. Vratiti **brendiran age gate** (18+)
 5. **Faza 3:** plaćanje (pouzeće COD + uplata na račun BACS), dostava po težini (Flexible Shipping, zona Srbija + lično preuzimanje), pravne stranice (impressum/PIB/MB, uslovi, reklamacije, privatnost)
