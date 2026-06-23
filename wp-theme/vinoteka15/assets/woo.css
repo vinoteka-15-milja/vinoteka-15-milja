@@ -129,3 +129,63 @@ html, body {
   background: linear-gradient(135deg, var(--clr-dark) 0%, var(--clr-burgundy-dark) 100%) !important;
 }
 .site-footer { background-color: var(--clr-dark) !important; }
+
+/* ============================================
+   Katalog filteri — dropdown popoveri + scroll liste
+   (pilule/chipovi/drawer/search su već u app.css)
+   ============================================ */
+.filter-dropdowns { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 8px; }
+
+details.filter-dropdown { position: relative; }
+.filter-dropdown-trigger {
+  list-style: none; cursor: pointer; user-select: none;
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--clr-card); color: var(--clr-cream);
+  border: 1px solid rgba(201,169,110,.3); border-radius: var(--radius-sm);
+  padding: 9px 14px; font-size: var(--fs-sm); white-space: nowrap;
+}
+.filter-dropdown-trigger::-webkit-details-marker { display: none; }
+.filter-dropdown[open] .filter-dropdown-trigger { border-color: var(--clr-gold); color: var(--clr-gold); }
+.filter-caret { font-size: 10px; transition: transform .15s; }
+.filter-dropdown[open] .filter-caret { transform: rotate(180deg); }
+
+.filter-dropdown-panel {
+  position: absolute; z-index: 40; top: calc(100% + 6px); left: 0;
+  width: 260px; max-width: 80vw;
+  background: var(--clr-panel); border: 1px solid rgba(201,169,110,.3);
+  border-radius: var(--radius-sm); padding: 10px;
+  box-shadow: 0 12px 32px rgba(0,0,0,.5);
+}
+.filter-list-search {
+  width: 100%; box-sizing: border-box; margin-bottom: 8px;
+  background: var(--clr-card); color: var(--clr-cream);
+  border: 1px solid rgba(201,169,110,.3); border-radius: var(--radius-sm); padding: 8px 10px;
+}
+.filter-term-list { max-height: 240px; overflow-y: auto; display: flex; flex-direction: column; }
+.filter-term {
+  display: flex; align-items: center; gap: 9px;
+  padding: 7px 6px; color: var(--clr-cream); text-decoration: none;
+  border-radius: 4px; font-size: var(--fs-sm);
+}
+.filter-term:hover { background: var(--clr-card); }
+.filter-term.hidden { display: none; }
+.filter-term-box {
+  width: 16px; height: 16px; flex: 0 0 16px;
+  border: 1px solid rgba(201,169,110,.5); border-radius: 3px; position: relative;
+}
+.filter-term.active .filter-term-box { background: var(--clr-gold); border-color: var(--clr-gold); }
+.filter-term.active .filter-term-box::after {
+  content: ''; position: absolute; left: 5px; top: 1px;
+  width: 4px; height: 9px; border: solid #171114; border-width: 0 2px 2px 0; transform: rotate(45deg);
+}
+.filter-term.active .filter-term-name { color: var(--clr-gold); }
+
+/* Na mobilnom (drawer) dropdownovi su uvek otvoreni i puni širine */
+@media (max-width: 767px) {
+  details.filter-dropdown[open] .filter-dropdown-panel,
+  details.filter-dropdown .filter-dropdown-panel {
+    position: static; width: 100%; box-shadow: none; border: none; padding: 0 0 8px;
+  }
+  .filter-dropdowns { flex-direction: column; align-items: stretch; }
+  .filter-dropdown-trigger { width: 100%; justify-content: space-between; }
+}
