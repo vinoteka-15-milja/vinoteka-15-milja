@@ -10,12 +10,11 @@ add_filter('woocommerce_product_tabs', function ($tabs) {
     return $tabs;
 }, 98);
 
-/* --- Single: breadcrumb samo na proizvodu (globalno je uklonjen) --- */
-add_action('woocommerce_before_main_content', function () {
-    if (function_exists('is_product') && is_product()) {
-        woocommerce_breadcrumb();
-    }
-}, 20);
+/* --- Single: breadcrumb iznad proizvoda.
+   NB: naš woocommerce.php wrapper zove woocommerce_content() koja NE okida
+   `woocommerce_before_main_content`; zato koristimo `woocommerce_before_single_product`
+   (okida se u content-single-product.php, samo na single proizvodu). --- */
+add_action('woocommerce_before_single_product', 'woocommerce_breadcrumb', 5);
 
 /* --- Single: „Na upit" CTA pre add-to-cart za nekupljive --- */
 add_action('woocommerce_single_product_summary', function () {
