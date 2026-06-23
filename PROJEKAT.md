@@ -2,7 +2,47 @@
 
 Sažetak svega urađenog, trenutnog stanja i plana. Tehnički detalji arhitekture su u `CLAUDE.md`.
 
-_Poslednje ažuriranje: 2026-06-12_
+_Poslednje ažuriranje: 2026-06-23_
+
+---
+
+## 0. AKTIVNO: WooCommerce shop sa NAŠIM dizajnom (staging) — nastavak rada
+
+> **Za nastavak u novom chatu:** pristupni podaci (WP admin, FTP) su u mojoj memoriji (`vinoteka-woocommerce-stanje`) i u lokalnom `.secrets-wp.md` (gitignored, NIJE na GitHub-u). Spec: `docs/superpowers/specs/2026-06-23-woocommerce-webshop-design.md`. Plan: `docs/superpowers/plans/2026-06-23-woocommerce-webshop-faze-1-3.md`.
+
+**Odluka (2026-06-23):** prelazak sa custom statičkog sajta na **WooCommerce** (zbog kartičnog plaćanja preko Raiffeisen-a). Posle neuspelog pokušaja sa generičkom Blocksy temom (izgledalo loše), vlasnik je izabrao **bespoke WordPress temu koja reprodukuje NAŠ dizajn nad WooCommerce-om**.
+
+**Okruženje:**
+- WordPress + WooCommerce na cPanel-u, poddomen **`staging.15milja.com`** (gradi se ovde; produkcija `15milja.com` ostaje statički "u izradi" do prebacivanja).
+- PHP 8.3, LiteSpeed. **LiteSpeed page keš je TRENUTNO ISKLJUČEN** (radi razvoja — da nema zastarelih stranica; vratiti ON pred lansiranje).
+- Deploy teme: preko **namenskog FTP naloga `deploy@15milja.com`** (rootovan na `public_html`) na `staging/wp-content/themes/vinoteka15/`. GitHub auto-deploy (Action) i dalje radi za statički `15milja.com` (main→public_html, dev→public_html/dev).
+
+**Bespoke tema `vinoteka15`** (izvor u repou: `wp-theme/vinoteka15/`, deployuje se FTP-om na staging):
+- `style.css` (WP header), `assets/app.css` (= naš `css/style.css`, ceo dizajn), `assets/woo.css` (WooCommerce most: grid, dark cart/checkout, paginacija), `assets/theme.js` (mobilni meni), `assets/logo.png` (= logo2.png).
+- `functions.php` — WooCommerce support, enqueue (priority 100), nav meni, korpa-fragment, **inline kritični CSS u `wp_head` (priority 999)** koji forsira tamni izgled/logo 52px/paginaciju jer plugin CSS gazi naš (KLJUČNO — bez ovoga pozadina ostaje svetla), filter valute → "RSD", helper `v15_type_from_product()`.
+- `header.php` (naš header: logo, nav, korpa), `footer.php`, `front-page.php` (hero "Vino bira strpljive" + 8 izdvojenih vina + citat), `index.php`, `woocommerce.php` (wrapper), `woocommerce/content-product.php` (NAŠ `.wine-card` markup za shop loop).
+- Tema je **standalone** (NE Blocksy child) — pri promenama aktivacije paziti da `template` ostane `vinoteka15` (ranije zaglavio na `blocksy`; rešeno prebacivanjem na Blocksy pa nazad).
+
+**Stanje (urađeno):**
+- 404 proizvoda uvezeno u WooCommerce (slike, cene, 8 kategorija). Atributi Vinarija/Region/Zemlja/Zapremina ušli kao **custom** (NE globalni) — za filtere treba prebaciti na globalne.
+- Plugin-ovi: aktivni **WooCommerce, LiteSpeed Cache, Flexible Shipping**. Deaktivirani: **Age Gate** (privremeno, vratiti brendiran), + očišćen bloat (Jetpack/Google/Pinterest/Reddit/Snapchat/MailPoet/PayPal).
+- Tema `vinoteka15` aktivna; početna (hero+featured), shop (naše tamne kartice, "U KORPU", "RSD"), logo 52px, paginacija stilizovana.
+- WooCommerce **"Coming soon"** režim je ON (gost vidi coming-soon; ulogovan vidi pravi sajt). Prebaciti na **Live** pred lansiranje (React toggle u WC→Settings→Site visibility; nije išlo kroz automatizaciju, ručno).
+
+**Sledeći koraci (Faza 2/3 ostatak):**
+1. Stranica pojedinačnog proizvoda + **korpa/checkout** u našem stilu + test porudžbine
+2. Globalni atributi (zamena custom) → filteri po zemlji/regionu/vinariji/zapremini
+3. Meni: izbaciti "Sample Page"/"Hello world", postaviti Početna/Vina/O nama/Kontakt; logo u header (trenutno gold grozd `logo.png`)
+4. Vratiti **brendiran age gate** (18+)
+5. **Faza 3:** plaćanje (pouzeće COD + uplata na račun BACS), dostava po težini (Flexible Shipping, zona Srbija + lično preuzimanje), pravne stranice (impressum/PIB/MB, uslovi, reklamacije, privatnost)
+6. **Faza 4:** Raiffeisen kartica (Monri/AllSecure plugin) kad banka da sandbox podatke
+7. **Faza 5:** prebaciti staging → `15milja.com` (klon/migracija URL-ova), Live, LiteSpeed keš ON
+
+**Ključne zamke (da se ne ponavljaju):**
+- Plugin CSS se učitava posle naše teme → tamni izgled se forsira inline `wp_head` CSS-om u `functions.php` (ne oslanjati se samo na app.css).
+- LiteSpeed keš za goste ume da servira staru verziju → drži keš OFF dok razvijamo, ili purge posle svake izmene (Toolbox → Purge All).
+- Screenshot kroz browser-automatizaciju zapinje na Google Fontovima — proveravati kroz computed-style/DOM, ne screenshot.
+- Promena cPanel lozinke lomi FTP/deploy → koristi se namenski `deploy@15milja.com` nalog (nezavisan).
 
 ---
 
