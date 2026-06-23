@@ -99,14 +99,12 @@ function v15_setup_pages() {
     }
 
     if (!get_page_by_path('kontakt')) {
-        $map = '<iframe src="https://maps.google.com/maps?q=' . rawurlencode('Žikice Jovanovića 9, Loznica') . '&output=embed" '
-             . 'width="100%" height="360" style="border:0;border-radius:12px" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>';
         $content =
             "<p><strong>Adresa:</strong> Žikice Jovanovića 9, 15300 Loznica</p>\n"
           . "<p><strong>Telefon:</strong> <a href=\"tel:+38163367514\">+381 63 367 514</a></p>\n"
           . "<p><strong>Email:</strong> <a href=\"mailto:vinoteka15milja@gmail.com\">vinoteka15milja@gmail.com</a></p>\n"
           . "<p><strong>Radno vreme:</strong> Pon–Pet 09–20h · Sub 09–15h · Ned: zatvoreno</p>\n"
-          . $map;
+          . "[v15_map]";
         wp_insert_post(array(
             'post_title'   => 'Kontakt',
             'post_name'    => 'kontakt',
@@ -125,30 +123,31 @@ function v15_setup_nav_menu() {
     $name = 'Glavni meni';
     if (!wp_get_nav_menu_object($name)) {
         $menu_id = wp_create_nav_menu($name);
-        if (!is_wp_error($menu_id)) {
-            wp_update_nav_menu_item($menu_id, 0, array(
-                'menu-item-title' => 'Početna', 'menu-item-url' => home_url('/'),
-                'menu-item-type' => 'custom', 'menu-item-status' => 'publish',
-            ));
-            wp_update_nav_menu_item($menu_id, 0, array(
-                'menu-item-title' => 'Vina', 'menu-item-url' => wc_get_page_permalink('shop'),
-                'menu-item-type' => 'custom', 'menu-item-status' => 'publish',
-            ));
-            $onama = get_page_by_path('o-nama');
-            if ($onama) wp_update_nav_menu_item($menu_id, 0, array(
-                'menu-item-title' => 'O nama', 'menu-item-type' => 'post_type',
-                'menu-item-object' => 'page', 'menu-item-object-id' => $onama->ID, 'menu-item-status' => 'publish',
-            ));
-            $kontakt = get_page_by_path('kontakt');
-            if ($kontakt) wp_update_nav_menu_item($menu_id, 0, array(
-                'menu-item-title' => 'Kontakt', 'menu-item-type' => 'post_type',
-                'menu-item-object' => 'page', 'menu-item-object-id' => $kontakt->ID, 'menu-item-status' => 'publish',
-            ));
-            $locations = get_theme_mod('nav_menu_locations');
-            if (!is_array($locations)) $locations = array();
-            $locations['primary'] = $menu_id;
-            set_theme_mod('nav_menu_locations', $locations);
-        }
+        if (is_wp_error($menu_id)) return; // ne markiraj kao done — pokušaj ponovo sledeći put
+        wp_update_nav_menu_item($menu_id, 0, array(
+            'menu-item-title' => 'Početna', 'menu-item-url' => home_url('/'),
+            'menu-item-type' => 'custom', 'menu-item-status' => 'publish',
+        ));
+        $shop = wc_get_page_permalink('shop');
+        if (!$shop) $shop = home_url('/shop/');
+        wp_update_nav_menu_item($menu_id, 0, array(
+            'menu-item-title' => 'Vina', 'menu-item-url' => $shop,
+            'menu-item-type' => 'custom', 'menu-item-status' => 'publish',
+        ));
+        $onama = get_page_by_path('o-nama');
+        if ($onama) wp_update_nav_menu_item($menu_id, 0, array(
+            'menu-item-title' => 'O nama', 'menu-item-type' => 'post_type',
+            'menu-item-object' => 'page', 'menu-item-object-id' => $onama->ID, 'menu-item-status' => 'publish',
+        ));
+        $kontakt = get_page_by_path('kontakt');
+        if ($kontakt) wp_update_nav_menu_item($menu_id, 0, array(
+            'menu-item-title' => 'Kontakt', 'menu-item-type' => 'post_type',
+            'menu-item-object' => 'page', 'menu-item-object-id' => $kontakt->ID, 'menu-item-status' => 'publish',
+        ));
+        $locations = get_theme_mod('nav_menu_locations');
+        if (!is_array($locations)) $locations = array();
+        $locations['primary'] = $menu_id;
+        set_theme_mod('nav_menu_locations', $locations);
     }
     update_option('v15_nav_setup', 'done');
 }

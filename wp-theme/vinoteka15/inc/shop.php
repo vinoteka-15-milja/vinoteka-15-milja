@@ -70,3 +70,11 @@ add_filter('woocommerce_checkout_fields', function ($fields) {
     }
     return $fields;
 });
+
+/* --- Kontakt mapa kao shortcode: iframe renderuje tema, ne čuva se kroz kses --- */
+add_shortcode('v15_map', function () {
+    $q = rawurlencode('Žikice Jovanovića 9, Loznica');
+    return '<iframe src="https://maps.google.com/maps?q=' . $q . '&output=embed" '
+         . 'width="100%" height="360" style="border:0;border-radius:12px" loading="lazy" '
+         . 'referrerpolicy="no-referrer-when-downgrade" title="Mapa — Vinoteka 15 Milja"></iframe>';
+});
