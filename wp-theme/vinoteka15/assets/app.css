@@ -3224,8 +3224,9 @@ textarea:focus-visible {
    Desktop: zaobljeni search desno od nav linkova.
    Mobilni (<=768px): unutar slide-out menija, na vrhu, puna širina.
    ============================================ */
-.main-nav { display: flex; align-items: center; gap: 28px; }
-.main-nav .nav-list { order: 1; }
+.main-nav { display: flex; align-items: center; gap: 20px; }
+.main-nav .nav-list { order: 1; gap: 26px; }
+.nav-link { white-space: nowrap; }              /* da se „O nama" ne prelama u dva reda */
 .header-search { order: 2; display: flex; }
 .header-search input[name="s"] {
   background: var(--clr-card);
@@ -3233,16 +3234,24 @@ textarea:focus-visible {
   border: 1px solid rgba(201, 169, 110, 0.3);
   border-radius: 100px;
   padding: 9px 18px;
-  width: 190px;
+  width: 160px;
   font-family: var(--ff-body);
   font-size: var(--fs-sm);
-  transition: all var(--transition);
+  transition: border-color var(--transition), width var(--transition);
 }
 .header-search input[name="s"]::placeholder { color: var(--clr-text-light); }
-.header-search input[name="s"]:focus { outline: none; border-color: var(--clr-gold); width: 220px; }
+.header-search input[name="s"]:focus { outline: none; border-color: var(--clr-gold); width: 190px; }
+
+/* WP admin bar (ulogovan korisnik): fiksni header mora ispod admin bara */
+.admin-bar .site-header { top: 32px; }
 
 @media (max-width: 768px) {
   .main-nav { flex-direction: column; gap: 28px; }
   .header-search { order: 0; width: 80%; max-width: 340px; }
   .header-search input[name="s"] { width: 100%; box-sizing: border-box; font-size: var(--fs-base); padding: 12px 20px; }
+}
+
+@media (max-width: 782px) {
+  /* admin bar je 46px visok na uskim ekranima */
+  .admin-bar .site-header { top: 46px; }
 }
