@@ -300,20 +300,8 @@ function v15_render_chips() {
 /** Glavni render: search + traka filtera. Kači se na woocommerce_before_shop_loop. */
 function v15_render_filters() {
     ?>
+    <?php // Pretraga je premeštena u header (.header-search); ovde ostaje samo mobilni toggle filtera. ?>
     <div class="catalog-controls">
-      <form class="wine-search" role="search" method="get" action="<?php echo esc_url(v15_shop_base_url()); ?>">
-        <input type="text" name="s" value="<?php echo isset($_GET['s']) ? esc_attr(wp_unslash($_GET['s'])) : ''; ?>"
-               placeholder="Pretraži po nazivu ili vinariji…" autocomplete="off">
-        <input type="hidden" name="post_type" value="product">
-        <?php
-        // Sačuvaj aktivne filtere pri pretrazi (inače bi pretraga obrisala izbor)
-        $keep = v15_current_args();
-        unset($keep['s'], $keep['paged'], $keep['post_type']);
-        foreach ($keep as $k => $v) {
-            echo '<input type="hidden" name="' . esc_attr($k) . '" value="' . esc_attr($v) . '">';
-        }
-        ?>
-      </form>
       <button class="mobile-filter-toggle" id="mobile-filter-toggle" type="button" aria-expanded="false" aria-controls="filters-panel">Filteri</button>
     </div>
 

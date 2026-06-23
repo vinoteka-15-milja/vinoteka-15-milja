@@ -49,6 +49,12 @@
     </a>
 
     <nav class="main-nav" id="main-nav" aria-label="Glavna navigacija">
+      <?php if (class_exists('WooCommerce')) : ?>
+      <form class="wine-search header-search" role="search" method="get" action="<?php echo esc_url(wc_get_page_permalink('shop')); ?>">
+        <input type="text" name="s" value="<?php echo isset($_GET['s']) ? esc_attr(wp_unslash($_GET['s'])) : ''; ?>" placeholder="Pretraži vina…" autocomplete="off" aria-label="Pretraži vina">
+        <input type="hidden" name="post_type" value="product">
+      </form>
+      <?php endif; ?>
       <?php
       if (has_nav_menu('primary')) {
           wp_nav_menu([

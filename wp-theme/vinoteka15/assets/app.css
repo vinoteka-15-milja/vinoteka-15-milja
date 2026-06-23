@@ -3218,3 +3218,31 @@ textarea:focus-visible {
     transform: none;
   }
 }
+
+/* ============================================
+   Header pretraga (premeštena iz filter trake)
+   Desktop: zaobljeni search desno od nav linkova.
+   Mobilni (<=768px): unutar slide-out menija, na vrhu, puna širina.
+   ============================================ */
+.main-nav { display: flex; align-items: center; gap: 28px; }
+.main-nav .nav-list { order: 1; }
+.header-search { order: 2; display: flex; }
+.header-search input[name="s"] {
+  background: var(--clr-card);
+  color: var(--clr-cream);
+  border: 1px solid rgba(201, 169, 110, 0.3);
+  border-radius: 100px;
+  padding: 9px 18px;
+  width: 190px;
+  font-family: var(--ff-body);
+  font-size: var(--fs-sm);
+  transition: all var(--transition);
+}
+.header-search input[name="s"]::placeholder { color: var(--clr-text-light); }
+.header-search input[name="s"]:focus { outline: none; border-color: var(--clr-gold); width: 220px; }
+
+@media (max-width: 768px) {
+  .main-nav { flex-direction: column; gap: 28px; }
+  .header-search { order: 0; width: 80%; max-width: 340px; }
+  .header-search input[name="s"] { width: 100%; box-sizing: border-box; font-size: var(--fs-base); padding: 12px 20px; }
+}
