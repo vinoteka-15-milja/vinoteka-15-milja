@@ -3224,10 +3224,10 @@ textarea:focus-visible {
    Desktop: zaobljeni search desno od nav linkova.
    Mobilni (<=768px): unutar slide-out menija, na vrhu, puna širina.
    ============================================ */
-.main-nav { display: flex; align-items: center; gap: 20px; }
-.main-nav .nav-list { order: 1; gap: 26px; }
+.main-nav { display: flex; align-items: center; flex: 1; padding-left: 40px; }
+.main-nav .nav-list { order: 1; gap: 26px; flex-shrink: 0; }
 .nav-link { white-space: nowrap; }              /* da se „O nama" ne prelama u dva reda */
-.header-search { order: 2; display: flex; }
+.header-search { order: 2; margin-left: auto; margin-right: 14px; display: flex; }
 .header-search input[name="s"] {
   background: var(--clr-card);
   color: var(--clr-cream);
@@ -3246,8 +3246,8 @@ textarea:focus-visible {
 .admin-bar .site-header { top: 32px; }
 
 @media (max-width: 768px) {
-  .main-nav { flex-direction: column; gap: 28px; }
-  .header-search { order: 0; width: 80%; max-width: 340px; }
+  .main-nav { flex-direction: column; gap: 28px; flex: none; padding-left: 0; }
+  .header-search { order: 0; width: 80%; max-width: 340px; margin: 0 auto; }
   .header-search input[name="s"] { width: 100%; box-sizing: border-box; font-size: var(--fs-base); padding: 12px 20px; }
 }
 
