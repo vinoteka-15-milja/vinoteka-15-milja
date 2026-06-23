@@ -5,6 +5,12 @@
 
 if (!defined('ABSPATH')) exit;
 
+/* Katalog filteri (definicije + render). */
+require_once __DIR__ . '/inc/filters.php';
+
+/* Filter traka iznad shop grida (woocommerce_content() okida ovaj hook). */
+add_action('woocommerce_before_shop_loop', 'v15_render_filters', 5);
+
 add_action('after_setup_theme', function () {
     add_theme_support('title-tag');
     add_theme_support('post-thumbnails');
