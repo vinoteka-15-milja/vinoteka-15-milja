@@ -59,4 +59,23 @@
       });
     });
   });
+
+  // Samo jedan dropdown otvoren u isto vreme + zatvaranje klikom van / Esc
+  var dropdowns = document.querySelectorAll('.filter-dropdown');
+  dropdowns.forEach(function (d) {
+    d.addEventListener('toggle', function () {
+      if (!d.open) return;
+      dropdowns.forEach(function (o) { if (o !== d && o.open) o.open = false; });
+    });
+  });
+  if (dropdowns.length) {
+    document.addEventListener('click', function (e) {
+      var inside = false;
+      dropdowns.forEach(function (d) { if (d.contains(e.target)) inside = true; });
+      if (!inside) dropdowns.forEach(function (d) { if (d.open) d.open = false; });
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') dropdowns.forEach(function (d) { if (d.open) d.open = false; });
+    });
+  }
 })();
