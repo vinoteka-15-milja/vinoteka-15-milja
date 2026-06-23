@@ -29,7 +29,7 @@ do_action('woocommerce_before_mini_cart'); ?>
               esc_attr($_product->get_sku())
           ), $cart_item_key); ?>
           <a class="v15-minicart-link" href="<?php echo esc_url($product_permalink ? $product_permalink : '#'); ?>">
-            <span class="v15-minicart-thumb"><?php echo $thumbnail; ?></span>
+            <span class="v15-minicart-thumb"><?php echo wp_kses_post($thumbnail); ?></span>
             <span class="v15-minicart-name"><?php echo wp_kses_post($product_name); ?></span>
           </a>
           <span class="v15-minicart-qtyprice"><?php echo esc_html($cart_item['quantity']); ?> &times; <?php echo wp_kses_post($product_price); ?></span>

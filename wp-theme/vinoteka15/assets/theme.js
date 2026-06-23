@@ -1,3 +1,9 @@
+/* Zaključaj skrol dok je BILO KOJI panel otvoren (nav / filteri / mini-korpa) */
+function v15SyncScrollLock() {
+  var open = document.querySelector('#main-nav.open, #filters-panel.open, #minicart.open');
+  document.body.style.overflow = open ? 'hidden' : '';
+}
+
 (function () {
   // Mobilna navigacija
   var toggle = document.getElementById('mobile-toggle');
@@ -7,13 +13,13 @@
       var open = nav.classList.toggle('open');
       toggle.classList.toggle('active');
       toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-      document.body.style.overflow = open ? 'hidden' : '';
+      v15SyncScrollLock();
     });
     nav.querySelectorAll('a').forEach(function (a) {
       a.addEventListener('click', function () {
         nav.classList.remove('open');
         toggle.classList.remove('active');
-        document.body.style.overflow = '';
+        v15SyncScrollLock();
       });
     });
   }
@@ -39,14 +45,14 @@
     drawerOpen = true;
     p.classList.add('open'); if (o) o.classList.add('open');
     if (b) b.setAttribute('aria-expanded', 'true');
-    document.body.style.overflow = 'hidden';
+    v15SyncScrollLock();
   }
   function closeDrawer() {
     var p = qs('#filters-panel'), o = qs('#filters-overlay'), b = qs('#mobile-filter-toggle');
     drawerOpen = false;
     if (p) p.classList.remove('open'); if (o) o.classList.remove('open');
     if (b) b.setAttribute('aria-expanded', 'false');
-    document.body.style.overflow = '';
+    v15SyncScrollLock();
   }
 
   // ---- AJAX: učitaj URL i zameni samo .wines-section (bez reload-a) ----
@@ -149,13 +155,13 @@
     if (!m) return;
     m.classList.add('open'); m.setAttribute('aria-hidden', 'false');
     if (o) o.classList.add('open');
-    document.body.style.overflow = 'hidden';
+    v15SyncScrollLock();
   }
   function closeMC() {
     var m = document.getElementById('minicart'), o = document.getElementById('minicart-overlay');
     if (m) { m.classList.remove('open'); m.setAttribute('aria-hidden', 'true'); }
     if (o) o.classList.remove('open');
-    document.body.style.overflow = '';
+    v15SyncScrollLock();
   }
   document.addEventListener('click', function (e) {
     if (e.target.closest('.cart-toggle')) { e.preventDefault(); openMC(); return; }
