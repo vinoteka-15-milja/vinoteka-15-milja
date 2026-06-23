@@ -141,3 +141,29 @@
   // ---- Back/forward dugme ----
   window.addEventListener('popstate', function () { ajaxGo(location.href, false); });
 })();
+
+/* ---- Mini-korpa (slide-out) ---- */
+(function () {
+  function openMC() {
+    var m = document.getElementById('minicart'), o = document.getElementById('minicart-overlay');
+    if (!m) return;
+    m.classList.add('open'); m.setAttribute('aria-hidden', 'false');
+    if (o) o.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeMC() {
+    var m = document.getElementById('minicart'), o = document.getElementById('minicart-overlay');
+    if (m) { m.classList.remove('open'); m.setAttribute('aria-hidden', 'true'); }
+    if (o) o.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.addEventListener('click', function (e) {
+    if (e.target.closest('.cart-toggle')) { e.preventDefault(); openMC(); return; }
+    if (e.target.closest('#minicart-close') || e.target.closest('#minicart-overlay')) { e.preventDefault(); closeMC(); }
+  });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeMC(); });
+  // Posle WC AJAX add-to-cart (WC okida jQuery event 'added_to_cart') otvori panel
+  if (window.jQuery) {
+    window.jQuery(document.body).on('added_to_cart', function () { openMC(); });
+  }
+})();
