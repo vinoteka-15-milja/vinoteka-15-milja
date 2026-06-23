@@ -39,6 +39,9 @@ jobs:
             .superpowers/**
             .playwright-mcp/**
             .claude/**
+            tools/**
+            wp-theme/**
+            docs/**
             *.md
             *.csv
             *.json
