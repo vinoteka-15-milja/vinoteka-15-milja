@@ -53,4 +53,15 @@
   </div>
 </header>
 
+<?php if (class_exists('WooCommerce')) : ?>
+<div class="v15-minicart-overlay" id="minicart-overlay"></div>
+<aside class="v15-minicart" id="minicart" aria-label="Korpa" aria-hidden="true">
+  <div class="v15-minicart-head">
+    <span class="v15-minicart-title">Korpa</span>
+    <button class="v15-minicart-close" id="minicart-close" type="button" aria-label="Zatvori korpu">&times;</button>
+  </div>
+  <div class="widget_shopping_cart_content"><?php woocommerce_mini_cart(); ?></div>
+</aside>
+<?php endif; ?>
+
 <main id="content" class="site-content">
