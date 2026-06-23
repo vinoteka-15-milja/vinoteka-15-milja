@@ -2,24 +2,28 @@
    WooCommerce most — naš dizajn nad WC markup-om
    ============================================ */
 
-/* Shop arhiva: grid kao naš .wines-grid */
+/* Shop arhiva + početna „Istaknuta vina" (.featured nije .woocommerce) + related: isti grid */
 .woocommerce ul.products,
-.woocommerce-page ul.products {
+.woocommerce-page ul.products,
+.featured ul.products {
   display: grid !important;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 28px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
-.woocommerce ul.products li.product {
+.woocommerce ul.products li.product,
+.featured ul.products li.product {
   width: auto !important;
   margin: 0 !important;
   float: none !important;
   clear: none !important;
 }
 .woocommerce ul.products::before,
-.woocommerce ul.products::after { content: none !important; }
+.woocommerce ul.products::after,
+.featured ul.products::before,
+.featured ul.products::after { content: none !important; }
 
 /* Rezultat/sortiranje traka */
 .woocommerce .woocommerce-result-count {

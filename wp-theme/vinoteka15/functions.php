@@ -33,7 +33,7 @@ add_action('wp_enqueue_scripts', function () {
         'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Lato:wght@300;400;700&display=swap',
         [], null
     );
-    wp_enqueue_style('v15-app', get_stylesheet_directory_uri() . '/assets/app.css', [], '1.0');
+    wp_enqueue_style('v15-app', get_stylesheet_directory_uri() . '/assets/app.css', [], '1.1');
     wp_enqueue_style('v15-woo', get_stylesheet_directory_uri() . '/assets/woo.css', ['v15-app'], '1.4');
     wp_enqueue_script('v15-main', get_stylesheet_directory_uri() . '/assets/theme.js', [], '1.6', true);
 }, 100);

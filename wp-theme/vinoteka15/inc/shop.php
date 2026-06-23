@@ -78,3 +78,8 @@ add_shortcode('v15_map', function () {
          . 'width="100%" height="360" style="border:0;border-radius:12px" loading="lazy" '
          . 'referrerpolicy="no-referrer-when-downgrade" title="Mapa — Vinoteka 15 Milja"></iframe>';
 });
+
+/* --- Naslov shop arhive: „Vina" umesto „Shop" --- */
+add_filter('woocommerce_page_title', function ($title) {
+    return (function_exists('is_shop') && is_shop()) ? 'Vina' : $title;
+});
