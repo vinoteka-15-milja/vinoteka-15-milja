@@ -148,6 +148,36 @@ function v15SyncScrollLock() {
   window.addEventListener('popstate', function () { ajaxGo(location.href, false); });
 })();
 
+/* ---- Age gate 18+ (po sesiji) ---- */
+(function () {
+  var overlay = document.getElementById('age-gate');
+  if (!overlay) return;
+  if (sessionStorage.getItem('ageVerified') === 'true') {
+    overlay.style.display = 'none';
+    document.body.classList.remove('age-locked');
+    return;
+  }
+  document.body.classList.add('age-locked');
+  var yes = document.getElementById('age-gate-yes');
+  var no = document.getElementById('age-gate-no');
+  if (yes) yes.addEventListener('click', function () {
+    sessionStorage.setItem('ageVerified', 'true');
+    overlay.classList.add('dismissed');
+    document.body.classList.remove('age-locked');
+    setTimeout(function () { overlay.style.display = 'none'; }, 500);
+  });
+  if (no) no.addEventListener('click', function () {
+    var denied = document.getElementById('age-gate-denied');
+    var title = overlay.querySelector('.age-gate-title');
+    var text = overlay.querySelector('.age-gate-text');
+    var buttons = overlay.querySelector('.age-gate-buttons');
+    if (title) title.textContent = 'Pristup odbijen';
+    if (text) text.style.display = 'none';
+    if (buttons) buttons.style.display = 'none';
+    if (denied) denied.style.display = 'block';
+  });
+})();
+
 /* ---- Mini-korpa (slide-out) ---- */
 (function () {
   function openMC() {
