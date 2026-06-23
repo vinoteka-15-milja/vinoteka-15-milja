@@ -9,6 +9,35 @@
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
 
+<!-- Age gate 18+ -->
+<div class="age-gate-overlay" id="age-gate">
+  <div class="age-gate-modal">
+    <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/logo.png'); ?>" alt="Vinoteka 15 Milja" class="age-gate-logo-img">
+    <div class="age-gate-brand">
+      <span class="age-gate-name">Vinoteka</span>
+      <span class="age-gate-sub">15 Milja</span>
+    </div>
+    <h2 class="age-gate-title">Dobrodošli</h2>
+    <p class="age-gate-text">Ovaj sajt sadrži informacije o alkoholnim pićima.<br>Da li imate 18 ili više godina?</p>
+    <div class="age-gate-buttons">
+      <button class="age-gate-btn age-gate-yes" id="age-gate-yes" type="button">Da, imam 18+</button>
+      <button class="age-gate-btn age-gate-no" id="age-gate-no" type="button">Ne, nemam</button>
+    </div>
+    <p class="age-gate-note">Ulaskom na sajt potvrđujete da imate zakonski dozvoljene godine za kupovinu alkohola.</p>
+    <p class="age-gate-denied" id="age-gate-denied" style="display:none">Žao nam je — sajtu mogu pristupiti samo punoletne osobe (18+).</p>
+  </div>
+</div>
+<script>
+/* Anti-flash: theme.js je u footeru; ako je već potvrđeno, sakrij odmah (bez treperenja). */
+(function(){try{
+  if (sessionStorage.getItem('ageVerified') === 'true') {
+    var el = document.getElementById('age-gate'); if (el) el.style.display = 'none';
+  } else {
+    document.body.classList.add('age-locked');
+  }
+}catch(e){}})();
+</script>
+
 <header class="site-header scrolled" id="site-header">
   <div class="container header-inner">
     <a href="<?php echo esc_url(home_url('/')); ?>" class="logo">
