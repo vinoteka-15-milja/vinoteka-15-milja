@@ -134,18 +134,33 @@ html, body {
    Katalog filteri — dropdown popoveri + scroll liste
    (pilule/chipovi/drawer/search su već u app.css)
    ============================================ */
-.filter-dropdowns { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 8px; }
+.filter-dropdowns {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  justify-content: center;      /* isti raspored kao pill redovi (Vrsta/Cena) */
+  margin-bottom: 16px;
+}
 
 details.filter-dropdown { position: relative; }
+/* Trigger se nosi kao pilula — isti jezik kao .filter-btn (Vrsta) */
 .filter-dropdown-trigger {
   list-style: none; cursor: pointer; user-select: none;
   display: inline-flex; align-items: center; gap: 8px;
-  background: var(--clr-card); color: var(--clr-cream);
-  border: 1px solid rgba(201,169,110,.3); border-radius: var(--radius-sm);
-  padding: 9px 14px; font-size: var(--fs-sm); white-space: nowrap;
+  font-family: var(--ff-body); font-size: var(--fs-sm); font-weight: var(--fw-medium);
+  color: var(--clr-text-light);
+  padding: 10px 24px;
+  border-radius: 100px;
+  border: 1.5px solid rgba(201,169,110,.3);
+  background-color: transparent;
+  transition: all var(--transition);
+  white-space: nowrap;
 }
 .filter-dropdown-trigger::-webkit-details-marker { display: none; }
-.filter-dropdown[open] .filter-dropdown-trigger { border-color: var(--clr-gold); color: var(--clr-gold); }
+.filter-dropdown-trigger:hover { border-color: var(--clr-gold); color: var(--clr-gold); }
+.filter-dropdown[open] > .filter-dropdown-trigger { border-color: var(--clr-gold); color: var(--clr-gold); }
+/* Ima izabranih → puna zlatna pilula (kao .filter-btn.active) */
+.filter-dropdown.has-selection > .filter-dropdown-trigger {
+  background-color: var(--clr-gold); border-color: var(--clr-gold); color: var(--clr-dark); font-weight: var(--fw-bold);
+}
 .filter-caret { font-size: 10px; transition: transform .15s; }
 .filter-dropdown[open] .filter-caret { transform: rotate(180deg); }
 

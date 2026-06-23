@@ -116,6 +116,70 @@ function v15_filter_attributes() {
     );
 }
 
+/** Da li je ijedan filter trenutno aktivan (odlučuje o kaskadnom sužavanju lista). */
+function v15_any_filter_active() {
+    if (!empty($_GET['product_cat'])) return true;
+    if (isset($_GET['min_price']) || isset($_GET['max_price'])) return true;
+    foreach (v15_filter_attributes() as $a) {
+        if (!empty($_GET[$a['filter_var']])) return true;
+    }
+    return false;
+}
+
+/**
+ * ID-jevi proizvoda koji odgovaraju trenutnim filterima, IZUZIMAJUĆI jedan atribut.
+ * (Sopstvenu taksonomiju izuzimamo da bi multi-izbor unutar iste grupe i dalje radio.)
+ */
+function v15_filtered_product_ids($exclude_taxonomy = '') {
+    static $cache = array();
+    if (array_key_exists($exclude_taxonomy, $cache)) return $cache[$exclude_taxonomy];
+
+    $tax_query = array('relation' => 'AND');
+    foreach (v15_filter_attributes() as $a) {
+        if ($a['taxonomy'] === $exclude_taxonomy) continue;
+        if (empty($_GET[$a['filter_var']])) continue;
+        $slugs = array_filter(array_map('trim', explode(',', wp_unslash($_GET[$a['filter_var']]))), 'strlen');
+        if ($slugs) {
+            $tax_query[] = array('taxonomy' => $a['taxonomy'], 'field' => 'slug', 'terms' => $slugs, 'operator' => 'IN');
+        }
+    }
+    if (!empty($_GET['product_cat'])) {
+        $cats = array_filter(array_map('trim', explode(',', wp_unslash($_GET['product_cat']))), 'strlen');
+        if ($cats) {
+            $tax_query[] = array('taxonomy' => 'product_cat', 'field' => 'slug', 'terms' => $cats, 'operator' => 'IN');
+        }
+    }
+
+    $args = array(
+        'post_type'      => 'product',
+        'post_status'    => 'publish',
+        'posts_per_page' => -1,
+        'fields'         => 'ids',
+        'no_found_rows'  => true,
+        'tax_query'      => $tax_query,
+    );
+    $min = isset($_GET['min_price']) ? floatval(wp_unslash($_GET['min_price'])) : null;
+    $max = isset($_GET['max_price']) ? floatval(wp_unslash($_GET['max_price'])) : null;
+    if ($min !== null || $max !== null) {
+        $meta = array('key' => '_price', 'type' => 'NUMERIC');
+        if ($min !== null && $max !== null) { $meta['value'] = array($min, $max); $meta['compare'] = 'BETWEEN'; }
+        elseif ($min !== null)               { $meta['value'] = $min;            $meta['compare'] = '>='; }
+        else                                 { $meta['value'] = $max;            $meta['compare'] = '<='; }
+        $args['meta_query'] = array($meta);
+    }
+    $q = new WP_Query($args);
+    $cache[$exclude_taxonomy] = $q->posts;
+    return $cache[$exclude_taxonomy];
+}
+
+/** Slugovi termina date taksonomije prisutni u trenutnom filtriranom skupu (kaskadno). */
+function v15_available_term_slugs($taxonomy) {
+    $ids = v15_filtered_product_ids($taxonomy);
+    if (empty($ids)) return array();
+    $slugs = wp_get_object_terms($ids, $taxonomy, array('fields' => 'slugs'));
+    return is_wp_error($slugs) ? array() : $slugs;
+}
+
 /** Render jednog atribut-dropdowna (Zemlja/Region/Vinarija). */
 function v15_render_attr_dropdown($label, $taxonomy, $filter_var, $qtype_var, $searchable = false) {
     $terms = get_terms(array('taxonomy' => $taxonomy, 'hide_empty' => true, 'orderby' => 'name'));
@@ -126,8 +190,19 @@ function v15_render_attr_dropdown($label, $taxonomy, $filter_var, $qtype_var, $s
         $selected = array_map('trim', explode(',', wp_unslash($_GET[$filter_var])));
     }
     $count = count(array_filter($selected, 'strlen'));
+
+    // Kaskadno sužavanje: kad je neki filter aktivan, prikaži samo termine prisutne u
+    // filtriranom skupu (npr. Zemlja=Srbija → Region pokazuje samo srpske regione).
+    // Već-izabrane termine uvek zadržavamo (da se mogu odčekirati).
+    if (v15_any_filter_active()) {
+        $allow = array_unique(array_merge(v15_available_term_slugs($taxonomy), $selected));
+        $terms = array_filter($terms, function ($t) use ($allow) {
+            return in_array($t->slug, $allow, true);
+        });
+        if (empty($terms)) return;
+    }
     ?>
-    <details class="filter-dropdown" data-filter="<?php echo esc_attr($filter_var); ?>">
+    <details class="filter-dropdown<?php echo $count ? ' has-selection' : ''; ?>" data-filter="<?php echo esc_attr($filter_var); ?>">
       <summary class="filter-dropdown-trigger">
         <?php echo esc_html($label); ?><?php if ($count) : ?> (<?php echo (int) $count; ?>)<?php endif; ?>
         <span class="filter-caret" aria-hidden="true">▾</span>
