@@ -1,0 +1,131 @@
+/* ============================================
+   WooCommerce most — naš dizajn nad WC markup-om
+   ============================================ */
+
+/* Shop arhiva: grid kao naš .wines-grid */
+.woocommerce ul.products,
+.woocommerce-page ul.products {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 28px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.woocommerce ul.products li.product {
+  width: auto !important;
+  margin: 0 !important;
+  float: none !important;
+  clear: none !important;
+}
+.woocommerce ul.products::before,
+.woocommerce ul.products::after { content: none !important; }
+
+/* Rezultat/sortiranje traka */
+.woocommerce .woocommerce-result-count {
+  color: var(--clr-text-light);
+  font-size: var(--fs-sm);
+}
+.woocommerce .woocommerce-ordering select,
+.woocommerce select, .woocommerce input[type="text"],
+.woocommerce input[type="email"], .woocommerce input[type="tel"],
+.woocommerce input[type="password"], .woocommerce textarea {
+  background: var(--clr-card);
+  color: var(--clr-cream);
+  border: 1px solid rgba(201,169,110,.3);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+}
+
+/* WooCommerce dugmad → naš zlatni stil (ako nije .btn) */
+.woocommerce a.button, .woocommerce button.button,
+.woocommerce input.button, .woocommerce #respond input#submit,
+.woocommerce .button.alt {
+  background: var(--clr-gold);
+  color: var(--clr-dark);
+  border-radius: var(--radius-sm);
+  font-weight: var(--fw-bold);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  padding: 12px 24px;
+}
+.woocommerce a.button:hover, .woocommerce button.button:hover,
+.woocommerce .button.alt:hover { background: var(--clr-gold-bright); color: var(--clr-dark); }
+
+/* "U korpu" u kartici koristi naš .btn (već stilizovan u app.css) */
+.wine-card .btn { width: auto; padding: 9px 18px; font-size: var(--fs-xs); }
+
+/* ---- Notices ---- */
+.woocommerce-message, .woocommerce-info, .woocommerce-error {
+  background: var(--clr-card);
+  color: var(--clr-cream);
+  border-top: 3px solid var(--clr-gold);
+}
+.woocommerce-message a, .woocommerce-info a { color: var(--clr-gold); }
+
+/* ---- Stranica proizvoda ---- */
+.single-product div.product { color: var(--clr-cream); }
+.single-product .product_title { color: var(--clr-cream); font-family: var(--ff-heading); }
+.single-product .woocommerce-product-gallery {
+  background: linear-gradient(180deg,#332930,#2b1d21);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+}
+.single-product .price, .single-product .price .amount { color: var(--clr-gold) !important; font-family: var(--ff-heading); }
+.single-product .woocommerce-tabs { color: var(--clr-text-light); }
+.single-product .shop_attributes th { color: var(--clr-gold); }
+.single-product .shop_attributes td { color: var(--clr-cream); }
+.single-product .quantity input.qty {
+  background: var(--clr-card); color: var(--clr-cream);
+  border: 1px solid rgba(201,169,110,.3); padding: 10px;
+}
+
+/* ---- Korpa / Checkout / Nalog: tabele i sekcije ---- */
+.woocommerce table.shop_table {
+  background: var(--clr-card);
+  border: 1px solid rgba(201,169,110,.15);
+  color: var(--clr-cream);
+}
+.woocommerce table.shop_table th, .woocommerce table.shop_table td {
+  border-top: 1px solid rgba(255,255,255,.07);
+}
+.woocommerce .cart_totals, .woocommerce-checkout #payment {
+  background: var(--clr-card);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+}
+.woocommerce-checkout #payment { border: 1px solid rgba(201,169,110,.15); }
+.woocommerce form .form-row label { color: var(--clr-text-light); }
+.woocommerce #payment .payment_methods li { color: var(--clr-cream); }
+
+/* Naslov stranice (umesto Blocksy belog banera) */
+.woocommerce-products-header { text-align: center; margin-bottom: 24px; }
+.woocommerce-products-header__title.page-title {
+  font-family: var(--ff-heading);
+  color: var(--clr-cream);
+  font-size: var(--fs-3xl);
+}
+
+/* Sadržaj ne sme da bude ispod fiksnog header-a */
+.site-content { min-height: 60vh; }
+
+/* ============================================
+   JAKI OVERRIDE — naš izgled iznad plugin/WC CSS-a
+   (učitava se posle svega, pa !important osigurava prevlast)
+   ============================================ */
+html, body {
+  background-color: var(--clr-bg) !important;
+  color: var(--clr-cream) !important;
+}
+.site-content, #content { background-color: var(--clr-bg) !important; }
+.hero {
+  background: radial-gradient(ellipse at 50% 0%, var(--clr-burgundy-glow) 0%, var(--clr-bg) 70%) !important;
+}
+.site-header.scrolled, .site-header {
+  background-color: rgba(20,15,17,.96) !important;
+}
+.wine-card { background-color: var(--clr-card) !important; }
+.quote-section {
+  background: linear-gradient(135deg, var(--clr-dark) 0%, var(--clr-burgundy-dark) 100%) !important;
+}
+.site-footer { background-color: var(--clr-dark) !important; }

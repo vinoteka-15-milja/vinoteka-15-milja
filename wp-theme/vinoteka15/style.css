@@ -1,65 +1,10 @@
 /*
 Theme Name: Vinoteka 15 Milja
 Theme URI: https://15milja.com
-Description: Custom child tema (Blocksy) — tamni premium izgled Vinoteke 15 Milja.
+Description: Bespoke tema Vinoteke 15 Milja — naš tamni premium dizajn na WooCommerce-u.
 Author: Vinoteka 15 Milja
-Template: blocksy
 Version: 1.0
 Text Domain: vinoteka15
 */
 
-:root {
-  --clr-bg: #171114;
-  --clr-panel: #1e171a;
-  --clr-card: #2a2125;
-  --clr-card-deep: #241c20;
-  --clr-burgundy-glow: #3a1d22;
-  --clr-gold: #C9A96E;
-  --clr-gold-bright: #D4AF37;
-  --clr-cream: #f4ece1;
-  --clr-text-light: #b8aca0;
-  --ff-heading: 'Playfair Display', Georgia, serif;
-  --ff-body: 'Lato', 'Helvetica Neue', Arial, sans-serif;
-}
-
-/* ---- Osnova ---- */
-html, body,
-.ct-main-styles, #main, .site, .ct-container,
-[data-content="boxed"] #main, .wp-site-blocks {
-  background-color: var(--clr-bg) !important;
-}
-body {
-  color: var(--clr-cream);
-  font-family: var(--ff-body);
-}
-/* tekst svetliji svuda po sadržaju */
-.entry-content, p, li, .ct-footer, .woocommerce { color: var(--clr-cream); }
-
-h1, h2, h3, h4, .entry-title, .site-title,
-.woocommerce-loop-product__title, .product_title {
-  font-family: var(--ff-heading) !important;
-  color: var(--clr-cream);
-}
-
-a { color: var(--clr-gold); }
-a:hover { color: var(--clr-gold-bright); }
-
-/* Header/footer tamni */
-header[data-device], .ct-header, .site-header { background: var(--clr-panel); }
-.ct-footer, .site-footer { background: var(--clr-panel); color: var(--clr-text-light); }
-
-/* Dugmad zlatna */
-.button, .wp-element-button, .ct-button,
-.woocommerce a.button, .woocommerce button.button, .woocommerce .button {
-  background: var(--clr-gold) !important;
-  color: #171114 !important;
-  border: none !important;
-  border-radius: 0 !important;
-  letter-spacing: .04em;
-}
-.button:hover, .woocommerce a.button:hover, .woocommerce button.button:hover {
-  background: var(--clr-gold-bright) !important;
-}
-
-/* Cene */
-.woocommerce .price, .woocommerce span.amount { color: var(--clr-cream); }
+/* Glavni dizajn je u assets/app.css; WooCommerce most u assets/woo.css. */
