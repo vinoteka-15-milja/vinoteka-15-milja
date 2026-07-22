@@ -34,7 +34,7 @@ add_action('wp_enqueue_scripts', function () {
         [], null
     );
     wp_enqueue_style('v15-app', get_stylesheet_directory_uri() . '/assets/app.css', [], '1.4');
-    wp_enqueue_style('v15-woo', get_stylesheet_directory_uri() . '/assets/woo.css', ['v15-app'], '1.5');
+    wp_enqueue_style('v15-woo', get_stylesheet_directory_uri() . '/assets/woo.css', ['v15-app'], '1.6');
     wp_enqueue_script('v15-main', get_stylesheet_directory_uri() . '/assets/theme.js', [], '1.6', true);
 }, 100);
 
@@ -49,11 +49,7 @@ add_action('wp_head', function () {
        . '.site-footer{background-color:#140f11!important;}'
        /* logo u headeru — ograniči visinu (neki plugin gazi app.css) */
        . '.logo-img{height:52px!important;width:auto!important;}'
-       /* paginacija — tamno/zlatno */
-       . '.woocommerce-pagination ul{border:none!important;display:flex;gap:8px;justify-content:center;margin:30px 0 0;}'
-       . '.woocommerce-pagination ul li{border:none!important;margin:0!important;overflow:visible;}'
-       . '.woocommerce-pagination ul li a,.woocommerce-pagination ul li span{background:#2a2125!important;color:#f4ece1!important;border:1px solid rgba(201,169,110,.3)!important;border-radius:4px;padding:9px 15px!important;min-width:42px;font-weight:700;}'
-       . '.woocommerce-pagination ul li span.current,.woocommerce-pagination ul li a:hover{background:#C9A96E!important;color:#171114!important;border-color:#C9A96E!important;}'
+       /* paginacija: puna pravila u woo.css (.woocommerce nav.woocommerce-pagination) */
        . '</style>';
 }, 999);
 

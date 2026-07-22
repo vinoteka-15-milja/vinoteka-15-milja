@@ -133,6 +133,65 @@
   }
 }
 
+/* ============================================
+   Paginacija — centrirana traka jasno ISPOD grida
+   (specifičnost .woocommerce nav.woocommerce-pagination ul da pobedi WC default;
+    woo.css se učitava posle WC-a, pa ne treba svuda !important)
+   ============================================ */
+.woocommerce nav.woocommerce-pagination {
+  margin-top: 56px !important;   /* jasan razmak od poslednjeg reda kartica */
+  clear: both;
+  text-align: center;
+}
+.woocommerce nav.woocommerce-pagination ul {
+  display: flex !important;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin: 0 !important;
+  padding: 0;
+  border: none !important;
+}
+.woocommerce nav.woocommerce-pagination ul li {
+  display: inline-flex;
+  margin: 0 !important;
+  border: none !important;
+  overflow: visible;
+}
+.woocommerce nav.woocommerce-pagination ul li a,
+.woocommerce nav.woocommerce-pagination ul li span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 42px;
+  height: 42px;
+  padding: 0 14px;
+  margin: 0 !important;
+  background: var(--clr-card);
+  color: var(--clr-cream);
+  border: 1px solid rgba(201, 169, 110, .3) !important;
+  border-radius: 10px;
+  font-weight: 700;
+  line-height: 1;
+  transition: background .2s ease, color .2s ease, border-color .2s ease;
+}
+/* „…" (dots) — bez okvira/pozadine, samo prigušen tekst */
+.woocommerce nav.woocommerce-pagination ul li span.dots {
+  background: none;
+  border: none !important;
+  color: rgba(244, 236, 225, .5);
+  min-width: 0;
+  padding: 0 4px;
+}
+.woocommerce nav.woocommerce-pagination ul li span.current,
+.woocommerce nav.woocommerce-pagination ul li a:hover,
+.woocommerce nav.woocommerce-pagination ul li a:focus-visible {
+  background: var(--clr-gold);
+  color: var(--clr-dark);
+  border-color: var(--clr-gold) !important;
+}
+
 /* ---- Notices ---- */
 .woocommerce-message, .woocommerce-info, .woocommerce-error {
   background: var(--clr-card);
