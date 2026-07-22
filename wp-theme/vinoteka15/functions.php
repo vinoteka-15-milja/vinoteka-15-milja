@@ -62,13 +62,6 @@ add_filter('woocommerce_currency_symbol', function ($symbol, $currency) {
 add_filter('loop_shop_per_page', fn() => 24);
 add_filter('loop_shop_columns', fn() => 4);
 
-/* Paginacija: kompaktna — prva … tekuća … poslednja (~3-4 broja + strelice) */
-add_filter('woocommerce_pagination_args', function ($args) {
-    $args['mid_size'] = 0;  // bez suseda — samo tekuća (koraci preko strelica)
-    $args['end_size'] = 1;  // prva i poslednja strana (orijentacija + skok)
-    return $args;
-});
-
 /* Korpa: broj artikala u headeru (AJAX fragment) */
 add_filter('woocommerce_add_to_cart_fragments', function ($fragments) {
     ob_start();
