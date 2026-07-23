@@ -313,7 +313,7 @@ details.filter-dropdown { position: relative; }
 /* ============================================
    Stranica proizvoda (single)
    ============================================ */
-.single-product .wines-section { padding-top: 24px; }
+.single-product .wines-section { padding-top: calc(var(--header-height) + 24px); }
 .single-product .woocommerce-breadcrumb {
   color: var(--clr-text-light); font-size: var(--fs-sm); margin-bottom: 18px;
 }
@@ -358,7 +358,7 @@ details.filter-dropdown { position: relative; }
    Klasik korpa / checkout
    ============================================ */
 .woocommerce-cart .wines-section,
-.woocommerce-checkout .wines-section { padding-top: 28px; }
+.woocommerce-checkout .wines-section { padding-top: calc(var(--header-height) + 28px); }
 .woocommerce table.shop_table {
   background: var(--clr-card); border: 1px solid rgba(201,169,110,.15);
   color: var(--clr-cream); border-radius: var(--radius-lg); border-collapse: separate; overflow: hidden;
