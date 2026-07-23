@@ -43,10 +43,10 @@ add_action('woocommerce_single_product_summary', function () {
     echo '</dl></div>';
 }, 45);
 
-/* --- Single: „Još iz kategorije" (related) — 4 kom, naš naslov --- */
+/* --- Single: „Još iz kategorije" (related) — pun red, naš naslov --- */
 add_filter('woocommerce_output_related_products_args', function ($args) {
-    $args['posts_per_page'] = 4;
-    $args['columns'] = 4;
+    $args['posts_per_page'] = 5;  // koliko stane u jedan red na punoj širini (~1200px)
+    $args['columns'] = 5;
     return $args;
 });
 add_filter('woocommerce_product_related_products_heading', function () {

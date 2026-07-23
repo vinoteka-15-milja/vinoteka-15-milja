@@ -319,10 +319,19 @@ details.filter-dropdown { position: relative; }
 }
 .single-product .woocommerce-breadcrumb a { color: var(--clr-gold); }
 .single-product div.product { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; color: var(--clr-cream); }
+/* WC default daje galeriji/summary width:48%+float (div.images/div.summary, 2 elem →
+   veća specifičnost) → force na 100% da popune celu grid ćeliju */
+.single-product div.product .woocommerce-product-gallery,
+.single-product div.product div.images,
+.single-product div.product .summary,
+.single-product div.product div.summary {
+  width: 100% !important; float: none !important; margin: 0 !important;
+}
 .single-product div.product .woocommerce-product-gallery {
   background: linear-gradient(180deg, #332930, #2b1d21);
-  border-radius: var(--radius-lg); padding: 32px; margin: 0;
+  border-radius: var(--radius-lg); padding: 32px;
 }
+.single-product .woocommerce-product-gallery__image img { width: 100%; height: auto; display: block; }
 .single-product .product_title {
   font-family: var(--ff-heading); color: var(--clr-cream); font-size: var(--fs-3xl); margin: 0 0 6px;
 }
@@ -346,9 +355,17 @@ details.filter-dropdown { position: relative; }
 .v15-details-list { display: grid; grid-template-columns: auto 1fr; gap: 6px 18px; margin: 0; }
 .v15-details-list dt { color: var(--clr-gold); font-weight: var(--fw-bold); }
 .v15-details-list dd { color: var(--clr-cream); margin: 0; }
-.single-product .related.products { margin-top: 56px; clear: both; }
+/* Related je 3. dete grida div.product → mora preko obe kolone (inače pola širine) */
+.single-product .related.products {
+  grid-column: 1 / -1;
+  margin-top: 56px; clear: both;
+}
 .single-product .related.products > h2 {
   font-family: var(--ff-heading); color: var(--clr-cream); font-size: var(--fs-2xl); text-align: center; margin-bottom: 24px;
+}
+/* Što više kartica u red na punoj širini; auto-fit → rastegnu se i srazmerno smanjuju */
+.single-product .related.products ul.products {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
 }
 @media (max-width: 767px) {
   .single-product div.product { grid-template-columns: 1fr; gap: 24px; }
