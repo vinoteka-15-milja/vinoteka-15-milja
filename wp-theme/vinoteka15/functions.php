@@ -62,6 +62,23 @@ add_filter('woocommerce_currency_symbol', function ($symbol, $currency) {
 add_filter('loop_shop_per_page', fn() => 24);
 add_filter('loop_shop_columns', fn() => 4);
 
+/* Preview staging bez WP logina:
+   ?pregled=KEY zaobiđe „Coming soon" i zapamti pristup 90 dana (cookie).
+   Zvanični WC hook (woocommerce_coming_soon_exclude, od 9.1). Gost sa linkom vidi pravi sajt.
+   Gašenje pristupa: obrisati ovaj blok (i po želji promeniti KEY). */
+add_filter('woocommerce_coming_soon_exclude', function ($excluded) {
+    $key = '447ec2b5e893f49dfdd226eb';
+    $ok = (isset($_GET['pregled'])   && hash_equals($key, (string) wp_unslash($_GET['pregled'])))
+       || (isset($_COOKIE['v15preview']) && hash_equals($key, (string) wp_unslash($_COOKIE['v15preview'])));
+    if ($ok) {
+        if (empty($_COOKIE['v15preview']) && !headers_sent()) {
+            setcookie('v15preview', $key, time() + 60 * 60 * 24 * 90, '/');
+        }
+        return true;
+    }
+    return $excluded;
+}, 10);
+
 /* Naslov shop arhive na pretrazi: „Rezultati za „pojam"" (umesto „Vina") */
 add_filter('woocommerce_page_title', function ($title) {
     $s = get_search_query();
