@@ -33,9 +33,9 @@ add_action('wp_enqueue_scripts', function () {
         'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Lato:wght@300;400;700&display=swap',
         [], null
     );
-    wp_enqueue_style('v15-app', get_stylesheet_directory_uri() . '/assets/app.css', [], '1.4');
+    wp_enqueue_style('v15-app', get_stylesheet_directory_uri() . '/assets/app.css', [], '1.5');
     wp_enqueue_style('v15-woo', get_stylesheet_directory_uri() . '/assets/woo.css', ['v15-app'], '1.6');
-    wp_enqueue_script('v15-main', get_stylesheet_directory_uri() . '/assets/theme.js', [], '1.6', true);
+    wp_enqueue_script('v15-main', get_stylesheet_directory_uri() . '/assets/theme.js', [], '1.7', true);
 }, 100);
 
 /* Kritični override INLINE na kraju <head>-a — pobeđuje plugin CSS bez obzira na redosled */
@@ -61,6 +61,18 @@ add_filter('woocommerce_currency_symbol', function ($symbol, $currency) {
 /* WooCommerce: koliko proizvoda po strani i kolona */
 add_filter('loop_shop_per_page', fn() => 24);
 add_filter('loop_shop_columns', fn() => 4);
+
+/* Naslov shop arhive na pretrazi: „Rezultati za „pojam"" (umesto „Vina") */
+add_filter('woocommerce_page_title', function ($title) {
+    $s = get_search_query();
+    if ($s === '' && !empty($_GET['s'])) {
+        $s = trim(wp_unslash($_GET['s']));
+    }
+    if ($s !== '') {
+        return 'Rezultati za „' . $s . '"';
+    }
+    return $title;
+}, 20);
 
 /* Korpa: broj artikala u headeru (AJAX fragment) */
 add_filter('woocommerce_add_to_cart_fragments', function ($fragments) {

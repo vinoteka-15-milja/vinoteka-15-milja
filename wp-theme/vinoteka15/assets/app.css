@@ -3225,30 +3225,73 @@ textarea:focus-visible {
    Mobilni (<=768px): unutar slide-out menija, na vrhu, puna širina.
    ============================================ */
 .main-nav { display: flex; align-items: center; flex: 1; padding-left: 40px; }
-.main-nav .nav-list { order: 1; gap: 26px; flex-shrink: 0; }
+.main-nav .nav-list { gap: 26px; flex-shrink: 0; }
 .nav-link { white-space: nowrap; }              /* da se „O nama" ne prelama u dva reda */
-.header-search { order: 2; margin-left: auto; margin-right: 14px; display: flex; }
-.header-search input[name="s"] {
+
+/* ---- Pretraga: lupa u header-actions, input se širi na klik ---- */
+.header-search { display: flex; align-items: center; position: relative; }
+.header-search-input {
+  width: 0;
+  padding: 0;
+  margin: 0;
+  border: 1px solid transparent;
+  border-radius: 100px;
   background: var(--clr-card);
   color: var(--clr-cream);
-  border: 1px solid rgba(201, 169, 110, 0.3);
-  border-radius: 100px;
-  padding: 9px 18px;
-  width: 160px;
   font-family: var(--ff-body);
   font-size: var(--fs-sm);
-  transition: border-color var(--transition), width var(--transition);
+  opacity: 0;
+  pointer-events: none;
+  transition: width var(--transition), opacity var(--transition), padding var(--transition), border-color var(--transition);
 }
-.header-search input[name="s"]::placeholder { color: var(--clr-text-light); }
-.header-search input[name="s"]:focus { outline: none; border-color: var(--clr-gold); width: 190px; }
+.header-search-input::placeholder { color: var(--clr-text-light); }
+.header-search.open .header-search-input {
+  width: 200px;
+  padding: 9px 16px;
+  margin-right: 4px;
+  opacity: 1;
+  pointer-events: auto;
+  border-color: rgba(201, 169, 110, 0.3);
+}
+.header-search.open .header-search-input:focus { outline: none; border-color: var(--clr-gold); }
+.header-search-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  background: none;
+  border: none;
+  color: var(--clr-cream);
+  cursor: pointer;
+  transition: color var(--transition);
+}
+.header-search-btn:hover,
+.header-search.open .header-search-btn { color: var(--clr-gold); }
 
 /* WP admin bar (ulogovan korisnik): fiksni header mora ispod admin bara */
 .admin-bar .site-header { top: 32px; }
 
 @media (max-width: 768px) {
   .main-nav { flex-direction: column; gap: 28px; flex: none; padding-left: 0; }
-  .header-search { order: 0; width: 80%; max-width: 340px; margin: 0 auto; }
-  .header-search input[name="s"] { width: 100%; box-sizing: border-box; font-size: var(--fs-base); padding: 12px 20px; }
+  .main-nav .nav-list { flex-direction: column; }
+  /* Na mobilnom input padne kao puna traka ispod headera (usidren za ceo .site-header) */
+  .header-search { position: static; }
+  .header-search.open .header-search-input {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 16px;
+    right: 16px;
+    width: auto;
+    max-width: none;
+    box-sizing: border-box;
+    padding: 12px 18px;
+    margin: 0;
+    font-size: var(--fs-base);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    z-index: 1002;
+  }
 }
 
 @media (max-width: 782px) {

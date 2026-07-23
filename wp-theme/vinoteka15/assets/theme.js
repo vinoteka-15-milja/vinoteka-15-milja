@@ -106,7 +106,7 @@ function v15SyncScrollLock() {
 
   // ---- Pretraga (submit) i sortiranje (change) → AJAX ----
   document.addEventListener('submit', function (e) {
-    var form = e.target.closest('.wine-search');
+    var form = e.target.closest('.header-search, .wine-search');
     if (!form) return;
     e.preventDefault(); ajaxGo(formUrl(form), true);
   });
@@ -146,6 +146,45 @@ function v15SyncScrollLock() {
 
   // ---- Back/forward dugme ----
   window.addEventListener('popstate', function () { ajaxGo(location.href, false); });
+})();
+
+/* ---- Header pretraga: lupa-ikonica koja širi input ---- */
+(function () {
+  var form = document.getElementById('header-search');
+  var btn = document.getElementById('header-search-btn');
+  if (!form || !btn) return;
+  var input = form.querySelector('.header-search-input');
+
+  function openS() {
+    form.classList.add('open');
+    btn.setAttribute('aria-expanded', 'true');
+    if (input) input.focus();
+  }
+  function closeS() {
+    form.classList.remove('open');
+    btn.setAttribute('aria-expanded', 'false');
+  }
+
+  btn.addEventListener('click', function (e) {
+    e.preventDefault();
+    if (!form.classList.contains('open')) { openS(); return; }
+    // već otvoreno: ima teksta → pretraži; prazno → zatvori
+    if (input && input.value.trim() !== '') {
+      if (form.requestSubmit) form.requestSubmit(); else form.submit();
+    } else {
+      closeS();
+    }
+  });
+
+  // Esc zatvara; klik van forme zatvara ako je prazna
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && form.classList.contains('open')) { closeS(); btn.blur(); }
+  });
+  document.addEventListener('click', function (e) {
+    if (form.classList.contains('open') && !e.target.closest('#header-search')) {
+      if (!input || input.value.trim() === '') closeS();
+    }
+  });
 })();
 
 /* ---- Age gate 18+ (po sesiji) ---- */

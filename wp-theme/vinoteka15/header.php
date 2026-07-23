@@ -49,12 +49,6 @@
     </a>
 
     <nav class="main-nav" id="main-nav" aria-label="Glavna navigacija">
-      <?php if (class_exists('WooCommerce')) : ?>
-      <form class="wine-search header-search" role="search" method="get" action="<?php echo esc_url(wc_get_page_permalink('shop')); ?>">
-        <input type="text" name="s" value="<?php echo isset($_GET['s']) ? esc_attr(wp_unslash($_GET['s'])) : ''; ?>" placeholder="Pretraži vina…" autocomplete="off" aria-label="Pretraži vina">
-        <input type="hidden" name="post_type" value="product">
-      </form>
-      <?php endif; ?>
       <?php
       if (has_nav_menu('primary')) {
           wp_nav_menu([
@@ -75,7 +69,15 @@
 
     <div class="header-actions">
       <?php if (class_exists('WooCommerce')) :
+        $v15_s = isset($_GET['s']) ? wp_unslash($_GET['s']) : '';
         $count = WC()->cart ? WC()->cart->get_cart_contents_count() : 0; ?>
+        <form class="header-search<?php echo $v15_s !== '' ? ' open' : ''; ?>" id="header-search" role="search" method="get" action="<?php echo esc_url(wc_get_page_permalink('shop')); ?>">
+          <input type="hidden" name="post_type" value="product">
+          <input type="text" name="s" class="header-search-input" value="<?php echo esc_attr($v15_s); ?>" placeholder="Pretraži vina…" autocomplete="off" aria-label="Pretraži vina">
+          <button type="button" class="header-search-btn" id="header-search-btn" aria-label="Pretraga" aria-expanded="<?php echo $v15_s !== '' ? 'true' : 'false'; ?>">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+          </button>
+        </form>
         <a class="cart-toggle" href="<?php echo esc_url(wc_get_cart_url()); ?>" aria-label="Korpa">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
           <span class="cart-count" id="cart-count"<?php if ($count == 0) echo ' hidden'; ?>><?php echo esc_html($count); ?></span>
