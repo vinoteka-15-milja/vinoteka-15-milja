@@ -42,12 +42,14 @@
   padding: 10px 14px;
 }
 
-/* WooCommerce dugmad → naš zlatni stil (ako nije .btn) */
+/* WooCommerce dugmad → naš zlatni stil (ako nije .btn).
+   .alt varijante moraju biti element-kvalifikovane (button.button.alt) + !important
+   jer WC default „.woocommerce button.button.alt" (ljubičasto) ima veću specifičnost. */
 .woocommerce a.button, .woocommerce button.button,
 .woocommerce input.button, .woocommerce #respond input#submit,
-.woocommerce .button.alt {
-  background: var(--clr-gold);
-  color: var(--clr-dark);
+.woocommerce a.button.alt, .woocommerce button.button.alt, .woocommerce input.button.alt {
+  background: var(--clr-gold) !important;
+  color: var(--clr-dark) !important;
   border-radius: var(--radius-sm);
   font-weight: var(--fw-bold);
   letter-spacing: .04em;
@@ -55,7 +57,8 @@
   padding: 12px 24px;
 }
 .woocommerce a.button:hover, .woocommerce button.button:hover,
-.woocommerce .button.alt:hover { background: var(--clr-gold-bright); color: var(--clr-dark); }
+.woocommerce a.button.alt:hover, .woocommerce button.button.alt:hover,
+.woocommerce input.button.alt:hover { background: var(--clr-gold-bright) !important; color: var(--clr-dark) !important; }
 
 /* ============================================
    Kartica vina — jednaka visina/širina + hover CTA

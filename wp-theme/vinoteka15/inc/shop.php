@@ -53,6 +53,27 @@ add_filter('woocommerce_product_related_products_heading', function () {
     return 'Još iz kategorije';
 });
 
+/* --- Prevod WC stringova (sajt je en_US; prevodimo tačno tražene stringove) --- */
+// Dugme na stranici proizvoda
+add_filter('woocommerce_product_single_add_to_cart_text', fn() => 'Dodaj u korpu');
+// Breadcrumb „Home" → „Početna"
+add_filter('woocommerce_breadcrumb_defaults', function ($args) {
+    $args['home'] = 'Početna';
+    return $args;
+});
+// „SKU:" → „Šifra:" (i sam „SKU")
+add_filter('gettext', function ($translated, $text, $domain) {
+    if ($domain !== 'woocommerce') return $translated;
+    static $map = ['SKU:' => 'Šifra:', 'SKU' => 'Šifra'];
+    return $map[$text] ?? $translated;
+}, 10, 3);
+// „Category:/Categories:" → „Kategorija:/Kategorije:"
+add_filter('ngettext', function ($translated, $single, $plural, $number, $domain) {
+    if ($domain !== 'woocommerce') return $translated;
+    if ($single === 'Category:') return ((int) $number > 1) ? 'Kategorije:' : 'Kategorija:';
+    return $translated;
+}, 10, 5);
+
 /* --- Mini-korpa: osveži sadržaj kroz AJAX fragment posle add-to-cart --- */
 add_filter('woocommerce_add_to_cart_fragments', function ($fragments) {
     ob_start();
