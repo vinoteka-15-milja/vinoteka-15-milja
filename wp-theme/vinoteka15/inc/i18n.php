@@ -260,11 +260,11 @@ add_filter('get_term', function ($term) {
  * (Token-zamena ispod menja placeholdere u sadržaju strana pri renderu.)
  * ------------------------------------------------------------------------- */
 $GLOBALS['V15_FIRMA'] = array(
-    'naziv'  => '[Naziv firme]',      // pun pravni naziv (npr. „... d.o.o." ili „PR ...")
-    'pib'    => '[PIB]',              // poreski identifikacioni broj
-    'mb'     => '[Matični broj]',     // matični broj privrednog subjekta
-    'pdv_sr' => '[Napomena o PDV-u: u sistemu PDV-a / nije u sistemu PDV-a.]',
-    'pdv_en' => '[VAT note]',
+    'naziv'  => 'Vinoteka 15 Milja d.o.o.',
+    'pib'    => '113348307',
+    'mb'     => '21850314',
+    'pdv_sr' => 'U cene je uračunat PDV.',
+    'pdv_en' => 'Prices include VAT.',
 );
 
 /* Zameni firmske placeholdere u sadržaju strana (radi za SR-DB i EN-filter). Prioritet posle EN-swap-a. */
