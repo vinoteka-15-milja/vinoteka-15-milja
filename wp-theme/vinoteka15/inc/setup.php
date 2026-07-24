@@ -9,12 +9,21 @@ if (!defined('ABSPATH')) exit;
 add_action('admin_init', 'v15_run_setup_migrations');
 function v15_run_setup_migrations() {
     if (!function_exists('wc_get_page_id')) return; // WooCommerce mora biti aktivan
+    v15_setup_language();
     v15_setup_classic_pages();
     v15_setup_cod();
     v15_setup_local_pickup();
     v15_setup_pages();
     v15_setup_nav_menu();
     v15_cleanup_defaults();
+}
+
+/** Baza jezika = en_US. Srpski je LATINICA i ide preko gettext overlay-a (inc/i18n.php);
+    WP-ov sr_RS je ćirilica pa ga NE koristimo (da admin/checkout ne budu ćirilica). */
+function v15_setup_language() {
+    if (get_option('v15_lang_base') === 'en') return;
+    update_option('WPLANG', ''); // '' => en_US (podrazumevano)
+    update_option('v15_lang_base', 'en');
 }
 
 /** /cart/ i /checkout/ sa blokova na klasik shortcode (idempotentno). */

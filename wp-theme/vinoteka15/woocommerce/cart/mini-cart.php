@@ -23,7 +23,7 @@ do_action('woocommerce_before_mini_cart'); ?>
           <?php echo apply_filters('woocommerce_cart_item_remove_link', sprintf(
               '<a href="%s" class="remove remove_from_cart_button" aria-label="%s" data-product_id="%s" data-cart_item_key="%s" data-product_sku="%s">&times;</a>',
               esc_url(wc_get_cart_remove_url($cart_item_key)),
-              esc_attr__('Ukloni stavku', 'woocommerce'),
+              esc_attr(v15_t('Ukloni stavku')),
               esc_attr($_product->get_id()),
               esc_attr($cart_item_key),
               esc_attr($_product->get_sku())
@@ -40,14 +40,14 @@ do_action('woocommerce_before_mini_cart'); ?>
     ?>
   </ul>
 
-  <p class="v15-minicart-total"><span>Ukupno</span> <strong><?php echo WC()->cart->get_cart_subtotal(); ?></strong></p>
+  <p class="v15-minicart-total"><span><?php echo esc_html(v15_t('Ukupno')); ?></span> <strong><?php echo WC()->cart->get_cart_subtotal(); ?></strong></p>
 
   <p class="v15-minicart-actions">
-    <a class="btn btn-outline" href="<?php echo esc_url(wc_get_cart_url()); ?>">Korpa</a>
-    <a class="btn btn-primary" href="<?php echo esc_url(wc_get_checkout_url()); ?>">Na plaćanje</a>
+    <a class="btn btn-outline" href="<?php echo esc_url(wc_get_cart_url()); ?>"><?php echo esc_html(v15_t('Korpa')); ?></a>
+    <a class="btn btn-primary" href="<?php echo esc_url(wc_get_checkout_url()); ?>"><?php echo esc_html(v15_t('Na plaćanje')); ?></a>
   </p>
 <?php else : ?>
-  <p class="v15-minicart-empty">Korpa je prazna.</p>
+  <p class="v15-minicart-empty"><?php echo esc_html(v15_t('Korpa je prazna.')); ?></p>
 <?php endif; ?>
 
 <?php do_action('woocommerce_after_mini_cart'); ?>

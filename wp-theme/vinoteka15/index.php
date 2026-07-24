@@ -7,7 +7,7 @@
         <div class="entry-content"><?php the_content(); ?></div>
       </article>
     <?php endwhile; else : ?>
-      <h1 class="section-title">Nema sadržaja</h1>
+      <h1 class="section-title"><?php echo esc_html(v15_t('Nema sadržaja')); ?></h1>
     <?php endif; ?>
   </div>
 </section>

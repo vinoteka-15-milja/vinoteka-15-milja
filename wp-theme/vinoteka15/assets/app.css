@@ -602,6 +602,26 @@ button {
   gap: 18px;
 }
 
+/* Prekidač jezika SR | EN */
+.lang-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--ff-body);
+  font-size: var(--fs-xs);
+  letter-spacing: .06em;
+}
+.lang-switch .lang-opt {
+  color: var(--clr-text-light);
+  text-decoration: none;
+  font-weight: var(--fw-bold);
+  padding: 2px 2px;
+  transition: color var(--transition);
+}
+.lang-switch .lang-opt:hover { color: var(--clr-cream); }
+.lang-switch .lang-opt.active { color: var(--clr-gold); }
+.lang-switch .lang-sep { color: rgba(201, 169, 110, .4); }
+
 .cart-toggle {
   position: relative;
   display: flex;

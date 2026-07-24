@@ -10,21 +10,21 @@
 <?php wp_body_open(); ?>
 
 <!-- Age gate 18+ -->
-<div class="age-gate-overlay" id="age-gate">
+<div class="age-gate-overlay" id="age-gate" data-denied-title="<?php echo esc_attr(v15_t('Pristup odbijen')); ?>">
   <div class="age-gate-modal">
     <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/logo.png'); ?>" alt="Vinoteka 15 Milja" class="age-gate-logo-img">
     <div class="age-gate-brand">
       <span class="age-gate-name">Vinoteka</span>
       <span class="age-gate-sub">15 Milja</span>
     </div>
-    <h2 class="age-gate-title">Dobrodošli</h2>
-    <p class="age-gate-text">Ovaj sajt sadrži informacije o alkoholnim pićima.<br>Da li imate 18 ili više godina?</p>
+    <h2 class="age-gate-title"><?php echo esc_html(v15_t('Dobrodošli')); ?></h2>
+    <p class="age-gate-text"><?php echo esc_html(v15_t('Ovaj sajt sadrži informacije o alkoholnim pićima.')); ?><br><?php echo esc_html(v15_t('Da li imate 18 ili više godina?')); ?></p>
     <div class="age-gate-buttons">
-      <button class="age-gate-btn age-gate-yes" id="age-gate-yes" type="button">Da, imam 18+</button>
-      <button class="age-gate-btn age-gate-no" id="age-gate-no" type="button">Ne, nemam</button>
+      <button class="age-gate-btn age-gate-yes" id="age-gate-yes" type="button"><?php echo esc_html(v15_t('Da, imam 18+')); ?></button>
+      <button class="age-gate-btn age-gate-no" id="age-gate-no" type="button"><?php echo esc_html(v15_t('Ne, nemam')); ?></button>
     </div>
-    <p class="age-gate-note">Ulaskom na sajt potvrđujete da imate zakonski dozvoljene godine za kupovinu alkohola.</p>
-    <p class="age-gate-denied" id="age-gate-denied" style="display:none">Žao nam je — sajtu mogu pristupiti samo punoletne osobe (18+).</p>
+    <p class="age-gate-note"><?php echo esc_html(v15_t('Ulaskom na sajt potvrđujete da imate zakonski dozvoljene godine za kupovinu alkohola.')); ?></p>
+    <p class="age-gate-denied" id="age-gate-denied" style="display:none"><?php echo esc_html(v15_t('Žao nam je — sajtu mogu pristupiti samo punoletne osobe (18+).')); ?></p>
   </div>
 </div>
 <script>
@@ -58,32 +58,33 @@
           ]);
       } else {
           echo '<ul class="nav-list">'
-             . '<li><a class="nav-link" href="' . esc_url(home_url('/')) . '">Početna</a></li>'
-             . '<li><a class="nav-link" href="' . esc_url(home_url('/shop/')) . '">Vina</a></li>'
-             . '<li><a class="nav-link" href="' . esc_url(home_url('/o-nama/')) . '">O nama</a></li>'
-             . '<li><a class="nav-link" href="' . esc_url(home_url('/kontakt/')) . '">Kontakt</a></li>'
+             . '<li><a class="nav-link" href="' . esc_url(home_url('/')) . '">' . esc_html(v15_t('Početna')) . '</a></li>'
+             . '<li><a class="nav-link" href="' . esc_url(home_url('/shop/')) . '">' . esc_html(v15_t('Vina')) . '</a></li>'
+             . '<li><a class="nav-link" href="' . esc_url(home_url('/o-nama/')) . '">' . esc_html(v15_t('O nama')) . '</a></li>'
+             . '<li><a class="nav-link" href="' . esc_url(home_url('/kontakt/')) . '">' . esc_html(v15_t('Kontakt')) . '</a></li>'
              . '</ul>';
       }
       ?>
     </nav>
 
     <div class="header-actions">
+      <?php v15_lang_switcher(); ?>
       <?php if (class_exists('WooCommerce')) :
         $v15_s = isset($_GET['s']) ? wp_unslash($_GET['s']) : '';
         $count = WC()->cart ? WC()->cart->get_cart_contents_count() : 0; ?>
         <form class="header-search<?php echo $v15_s !== '' ? ' open' : ''; ?>" id="header-search" role="search" method="get" action="<?php echo esc_url(wc_get_page_permalink('shop')); ?>">
           <input type="hidden" name="post_type" value="product">
-          <input type="text" name="s" class="header-search-input" value="<?php echo esc_attr($v15_s); ?>" placeholder="Pretraži vina…" autocomplete="off" aria-label="Pretraži vina">
-          <button type="button" class="header-search-btn" id="header-search-btn" aria-label="Pretraga" aria-expanded="<?php echo $v15_s !== '' ? 'true' : 'false'; ?>">
+          <input type="text" name="s" class="header-search-input" value="<?php echo esc_attr($v15_s); ?>" placeholder="<?php echo esc_attr(v15_t('Pretraži vina…')); ?>" autocomplete="off" aria-label="<?php echo esc_attr(v15_t('Pretraga')); ?>">
+          <button type="button" class="header-search-btn" id="header-search-btn" aria-label="<?php echo esc_attr(v15_t('Pretraga')); ?>" aria-expanded="<?php echo $v15_s !== '' ? 'true' : 'false'; ?>">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
           </button>
         </form>
-        <a class="cart-toggle" href="<?php echo esc_url(wc_get_cart_url()); ?>" aria-label="Korpa">
+        <a class="cart-toggle" href="<?php echo esc_url(wc_get_cart_url()); ?>" aria-label="<?php echo esc_attr(v15_t('Korpa')); ?>">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
           <span class="cart-count" id="cart-count"<?php if ($count == 0) echo ' hidden'; ?>><?php echo esc_html($count); ?></span>
         </a>
       <?php endif; ?>
-      <button class="mobile-toggle" id="mobile-toggle" aria-label="Meni" aria-expanded="false">
+      <button class="mobile-toggle" id="mobile-toggle" aria-label="<?php echo esc_attr(v15_t('Meni')); ?>" aria-expanded="false">
         <span class="hamburger-line"></span><span class="hamburger-line"></span><span class="hamburger-line"></span>
       </button>
     </div>
@@ -94,8 +95,8 @@
 <div class="v15-minicart-overlay" id="minicart-overlay"></div>
 <aside class="v15-minicart" id="minicart" aria-label="Korpa" aria-hidden="true">
   <div class="v15-minicart-head">
-    <span class="v15-minicart-title">Korpa</span>
-    <button class="v15-minicart-close" id="minicart-close" type="button" aria-label="Zatvori korpu">&times;</button>
+    <span class="v15-minicart-title"><?php echo esc_html(v15_t('Korpa')); ?></span>
+    <button class="v15-minicart-close" id="minicart-close" type="button" aria-label="<?php echo esc_attr(v15_t('Zatvori korpu')); ?>">&times;</button>
   </div>
   <div class="widget_shopping_cart_content"><?php woocommerce_mini_cart(); ?></div>
 </aside>

@@ -20,8 +20,8 @@ add_action('woocommerce_before_single_product', 'woocommerce_breadcrumb', 5);
 add_action('woocommerce_single_product_summary', function () {
     global $product;
     if (!$product || ($product->is_purchasable() && $product->get_price() !== '')) return;
-    echo '<p class="v15-inquiry"><span class="v15-inquiry-label">Na upit</span> '
-       . '<a class="btn btn-outline" href="' . esc_url(home_url('/kontakt/')) . '">Pošalji upit</a></p>';
+    echo '<p class="v15-inquiry"><span class="v15-inquiry-label">' . esc_html(v15_t('Na upit')) . '</span> '
+       . '<a class="btn btn-outline" href="' . esc_url(home_url('/kontakt/')) . '">' . esc_html(v15_t('Pošalji upit')) . '</a></p>';
 }, 29);
 
 /* --- Single: „Detalji" spec-lista (atributi) posle add-to-cart --- */
@@ -36,9 +36,10 @@ add_action('woocommerce_single_product_summary', function () {
     );
     $rows = array_filter($rows, 'strlen');
     if (empty($rows)) return;
-    echo '<div class="v15-details"><h3 class="v15-details-title">Detalji</h3><dl class="v15-details-list">';
+    echo '<div class="v15-details"><h3 class="v15-details-title">' . esc_html(v15_t('Detalji')) . '</h3><dl class="v15-details-list">';
     foreach ($rows as $k => $v) {
-        echo '<dt>' . esc_html($k) . '</dt><dd>' . esc_html($v) . '</dd>';
+        $val = ($k === 'Zemlja') ? v15_country($v) : $v; // vrednost zemlje prevedi; ostalo (vlastite imenice) ostaje
+        echo '<dt>' . esc_html(v15_t($k)) . '</dt><dd>' . esc_html($val) . '</dd>';
     }
     echo '</dl></div>';
 }, 45);
@@ -50,29 +51,18 @@ add_filter('woocommerce_output_related_products_args', function ($args) {
     return $args;
 });
 add_filter('woocommerce_product_related_products_heading', function () {
-    return 'Još iz kategorije';
+    return v15_t('Još iz kategorije');
 });
 
-/* --- Prevod WC stringova (sajt je en_US; prevodimo tačno tražene stringove) --- */
+/* --- Prevod WC stringova na SRPSKI (samo u SR modu; u EN ostaje engleski original).
+   WP je postavljen na sr_RS pa WC većinu prevede sam; ovde fiksiramo tačne reči. --- */
 // Dugme na stranici proizvoda
-add_filter('woocommerce_product_single_add_to_cart_text', fn() => 'Dodaj u korpu');
-// Breadcrumb „Home" → „Početna"
+add_filter('woocommerce_product_single_add_to_cart_text', fn($t) => v15_is_en() ? $t : 'Dodaj u korpu');
+// Breadcrumb „Home" → „Početna" (SKU/Category i ostali WC stringovi su u inc/i18n.php)
 add_filter('woocommerce_breadcrumb_defaults', function ($args) {
-    $args['home'] = 'Početna';
+    if (!v15_is_en()) $args['home'] = 'Početna';
     return $args;
 });
-// „SKU:" → „Šifra:" (i sam „SKU")
-add_filter('gettext', function ($translated, $text, $domain) {
-    if ($domain !== 'woocommerce') return $translated;
-    static $map = ['SKU:' => 'Šifra:', 'SKU' => 'Šifra'];
-    return $map[$text] ?? $translated;
-}, 10, 3);
-// „Category:/Categories:" → „Kategorija:/Kategorije:"
-add_filter('ngettext', function ($translated, $single, $plural, $number, $domain) {
-    if ($domain !== 'woocommerce') return $translated;
-    if ($single === 'Category:') return ((int) $number > 1) ? 'Kategorije:' : 'Kategorija:';
-    return $translated;
-}, 10, 5);
 
 /* --- Mini-korpa: osveži sadržaj kroz AJAX fragment posle add-to-cart --- */
 add_filter('woocommerce_add_to_cart_fragments', function ($fragments) {
@@ -100,7 +90,7 @@ add_shortcode('v15_map', function () {
          . 'referrerpolicy="no-referrer-when-downgrade" title="Mapa — Vinoteka 15 Milja"></iframe>';
 });
 
-/* --- Naslov shop arhive: „Vina" umesto „Shop" --- */
+/* --- Naslov shop arhive: „Vina" / „Wines" umesto „Shop" --- */
 add_filter('woocommerce_page_title', function ($title) {
-    return (function_exists('is_shop') && is_shop()) ? 'Vina' : $title;
+    return (function_exists('is_shop') && is_shop()) ? v15_t('Vina') : $title;
 });

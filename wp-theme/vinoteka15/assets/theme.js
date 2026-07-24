@@ -210,7 +210,7 @@ function v15SyncScrollLock() {
     var title = overlay.querySelector('.age-gate-title');
     var text = overlay.querySelector('.age-gate-text');
     var buttons = overlay.querySelector('.age-gate-buttons');
-    if (title) title.textContent = 'Pristup odbijen';
+    if (title) title.textContent = overlay.getAttribute('data-denied-title') || 'Pristup odbijen';
     if (text) text.style.display = 'none';
     if (buttons) buttons.style.display = 'none';
     if (denied) denied.style.display = 'block';

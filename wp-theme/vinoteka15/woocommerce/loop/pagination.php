@@ -36,7 +36,7 @@ $page_url = function ($n) {
 <nav class="woocommerce-pagination">
   <ul class="page-numbers">
     <?php if ($current > 1) : ?>
-      <li><a class="prev page-numbers" href="<?php echo esc_url($page_url($current - 1)); ?>" aria-label="Prethodna">←</a></li>
+      <li><a class="prev page-numbers" href="<?php echo esc_url($page_url($current - 1)); ?>" aria-label="<?php echo esc_attr(v15_t('Prethodna')); ?>">←</a></li>
     <?php endif; ?>
 
     <?php for ($i = $start; $i <= $end; $i++) : ?>
@@ -48,7 +48,7 @@ $page_url = function ($n) {
     <?php endfor; ?>
 
     <?php if ($current < $total) : ?>
-      <li><a class="next page-numbers" href="<?php echo esc_url($page_url($current + 1)); ?>" aria-label="Sledeća">→</a></li>
+      <li><a class="next page-numbers" href="<?php echo esc_url($page_url($current + 1)); ?>" aria-label="<?php echo esc_attr(v15_t('Sledeća')); ?>">→</a></li>
     <?php endif; ?>
   </ul>
 </nav>

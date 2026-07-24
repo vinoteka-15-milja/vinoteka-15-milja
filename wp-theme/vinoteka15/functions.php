@@ -5,6 +5,8 @@
 
 if (!defined('ABSPATH')) exit;
 
+/* Dvojezičnost (SR/EN) — mora prva (definiše v15_t/v15_country/v15_lang). */
+require_once __DIR__ . '/inc/i18n.php';
 /* Katalog filteri (definicije + render). */
 require_once __DIR__ . '/inc/filters.php';
 require_once __DIR__ . '/inc/setup.php';
@@ -33,9 +35,9 @@ add_action('wp_enqueue_scripts', function () {
         'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Lato:wght@300;400;700&display=swap',
         [], null
     );
-    wp_enqueue_style('v15-app', get_stylesheet_directory_uri() . '/assets/app.css', [], '1.5');
+    wp_enqueue_style('v15-app', get_stylesheet_directory_uri() . '/assets/app.css', [], '1.6');
     wp_enqueue_style('v15-woo', get_stylesheet_directory_uri() . '/assets/woo.css', ['v15-app'], '1.10');
-    wp_enqueue_script('v15-main', get_stylesheet_directory_uri() . '/assets/theme.js', [], '1.7', true);
+    wp_enqueue_script('v15-main', get_stylesheet_directory_uri() . '/assets/theme.js', [], '1.8', true);
 }, 100);
 
 /* Kritični override INLINE na kraju <head>-a — pobeđuje plugin CSS bez obzira na redosled */
@@ -86,7 +88,7 @@ add_filter('woocommerce_page_title', function ($title) {
         $s = trim(wp_unslash($_GET['s']));
     }
     if ($s !== '') {
-        return 'Rezultati za „' . $s . '"';
+        return v15_is_en() ? ('Results for “' . $s . '”') : ('Rezultati za „' . $s . '"');
     }
     return $title;
 }, 20);

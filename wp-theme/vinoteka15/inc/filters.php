@@ -204,22 +204,24 @@ function v15_render_attr_dropdown($label, $taxonomy, $filter_var, $qtype_var, $s
     ?>
     <details class="filter-dropdown<?php echo $count ? ' has-selection' : ''; ?>" data-filter="<?php echo esc_attr($filter_var); ?>">
       <summary class="filter-dropdown-trigger">
-        <?php echo esc_html($label); ?><?php if ($count) : ?> (<?php echo (int) $count; ?>)<?php endif; ?>
+        <?php echo esc_html(v15_t($label)); ?><?php if ($count) : ?> (<?php echo (int) $count; ?>)<?php endif; ?>
         <span class="filter-caret" aria-hidden="true">▾</span>
       </summary>
       <div class="filter-dropdown-panel">
         <?php if ($searchable) : ?>
-          <input type="text" class="filter-list-search" placeholder="Pretraži…" autocomplete="off" aria-label="Pretraži u listi">
+          <input type="text" class="filter-list-search" placeholder="<?php echo esc_attr(v15_t('Pretraži…')); ?>" autocomplete="off" aria-label="<?php echo esc_attr(v15_t('Pretraži u listi')); ?>">
         <?php endif; ?>
         <div class="filter-term-list">
           <?php foreach ($terms as $t) :
-              $is = in_array($t->slug, $selected, true); ?>
+              $is = in_array($t->slug, $selected, true);
+              // Zemlja → prevedena vrednost; region/vinarija = vlastite imenice (ostaju)
+              $tname = ($taxonomy === 'pa_zemlja') ? v15_country($t->name) : $t->name; ?>
             <a class="filter-term <?php echo $is ? 'active' : ''; ?>"
                href="<?php echo esc_url(v15_attr_toggle_url($filter_var, $qtype_var, $t->slug)); ?>"
                rel="nofollow"
-               data-name="<?php echo esc_attr(mb_strtolower($t->name)); ?>">
+               data-name="<?php echo esc_attr(mb_strtolower($tname)); ?>">
               <span class="filter-term-box" aria-hidden="true"></span>
-              <span class="filter-term-name"><?php echo esc_html($t->name); ?></span>
+              <span class="filter-term-name"><?php echo esc_html($tname); ?></span>
             </a>
           <?php endforeach; ?>
         </div>
@@ -234,12 +236,12 @@ function v15_render_category_pills() {
     if (is_wp_error($terms)) return;
     $cur = isset($_GET['product_cat']) ? wp_unslash($_GET['product_cat']) : '';
     ?>
-    <div class="filter-group-label">Vrsta</div>
+    <div class="filter-group-label"><?php echo esc_html(v15_t('Vrsta')); ?></div>
     <div class="wine-filters">
-      <a class="filter-btn <?php echo $cur === '' ? 'active' : ''; ?>" href="<?php echo esc_url(v15_single_url('product_cat', '')); ?>" rel="nofollow">Sve</a>
+      <a class="filter-btn <?php echo $cur === '' ? 'active' : ''; ?>" href="<?php echo esc_url(v15_single_url('product_cat', '')); ?>" rel="nofollow"><?php echo esc_html(v15_t('Sve')); ?></a>
       <?php foreach ($terms as $t) : ?>
         <a class="filter-btn <?php echo $cur === $t->slug ? 'active' : ''; ?>"
-           href="<?php echo esc_url(v15_single_url('product_cat', $t->slug)); ?>" rel="nofollow"><?php echo esc_html($t->name); ?></a>
+           href="<?php echo esc_url(v15_single_url('product_cat', $t->slug)); ?>" rel="nofollow"><?php echo esc_html(v15_t($t->name)); ?></a>
       <?php endforeach; ?>
     </div>
     <?php
@@ -249,12 +251,12 @@ function v15_render_category_pills() {
 function v15_render_price_pills() {
     $active = v15_active_price_bucket();
     ?>
-    <div class="filter-group-label">Cena</div>
+    <div class="filter-group-label"><?php echo esc_html(v15_t('Cena')); ?></div>
     <div class="price-toggle">
-      <a class="price-btn <?php echo $active === 'all' ? 'active' : ''; ?>" href="<?php echo esc_url(v15_price_url('all')); ?>" rel="nofollow">Sve cene</a>
+      <a class="price-btn <?php echo $active === 'all' ? 'active' : ''; ?>" href="<?php echo esc_url(v15_price_url('all')); ?>" rel="nofollow"><?php echo esc_html(v15_t('Sve cene')); ?></a>
       <?php foreach (v15_price_buckets() as $key => $b) : ?>
         <a class="price-btn <?php echo $active === $key ? 'active' : ''; ?>"
-           href="<?php echo esc_url(v15_price_url($key)); ?>" rel="nofollow"><?php echo esc_html($b['label']); ?></a>
+           href="<?php echo esc_url(v15_price_url($key)); ?>" rel="nofollow"><?php echo esc_html(v15_t($b['label'])); ?></a>
       <?php endforeach; ?>
     </div>
     <?php
@@ -266,20 +268,22 @@ function v15_render_chips() {
 
     if (!empty($_GET['product_cat'])) {
         $slug = wp_unslash($_GET['product_cat']);
-        $chips[] = array(v15_term_name('product_cat', $slug), v15_single_url('product_cat', ''));
+        $chips[] = array(v15_t(v15_term_name('product_cat', $slug)), v15_single_url('product_cat', ''));
     }
     foreach (v15_filter_attributes() as $a) {
         $fvar = $a['filter_var'];
         if (empty($_GET[$fvar])) continue;
         $slugs = array_filter(array_map('trim', explode(',', wp_unslash($_GET[$fvar]))), 'strlen');
         foreach ($slugs as $slug) {
-            $chips[] = array(v15_term_name($a['taxonomy'], $slug), v15_attr_toggle_url($fvar, $a['qtype_var'], $slug));
+            $name = v15_term_name($a['taxonomy'], $slug);
+            if ($a['taxonomy'] === 'pa_zemlja') $name = v15_country($name); // zemlja prevedena; region/vinarija ostaju
+            $chips[] = array($name, v15_attr_toggle_url($fvar, $a['qtype_var'], $slug));
         }
     }
     $pb = v15_active_price_bucket();
     if ($pb !== 'all' && $pb !== '') {
         $buckets = v15_price_buckets();
-        $chips[] = array($buckets[$pb]['label'], v15_price_url('all'));
+        $chips[] = array(v15_t($buckets[$pb]['label']), v15_price_url('all'));
     }
     if (!empty($_GET['s'])) {
         $args = v15_current_args(); unset($args['s'], $args['paged']);
@@ -292,7 +296,7 @@ function v15_render_chips() {
       <?php foreach ($chips as $c) : ?>
         <a class="active-chip" href="<?php echo esc_url($c[1]); ?>" rel="nofollow"><?php echo esc_html($c[0]); ?> <span class="chip-x" aria-hidden="true">×</span></a>
       <?php endforeach; ?>
-      <a class="active-chip chip-clear" href="<?php echo esc_url(v15_shop_base_url()); ?>" rel="nofollow">Poništi sve</a>
+      <a class="active-chip chip-clear" href="<?php echo esc_url(v15_shop_base_url()); ?>" rel="nofollow"><?php echo esc_html(v15_t('Poništi sve')); ?></a>
     </div>
     <?php
 }
@@ -302,19 +306,19 @@ function v15_render_filters() {
     ?>
     <?php // Pretraga je premeštena u header (.header-search); ovde ostaje samo mobilni toggle filtera. ?>
     <div class="catalog-controls">
-      <button class="mobile-filter-toggle" id="mobile-filter-toggle" type="button" aria-expanded="false" aria-controls="filters-panel">Filteri</button>
+      <button class="mobile-filter-toggle" id="mobile-filter-toggle" type="button" aria-expanded="false" aria-controls="filters-panel"><?php echo esc_html(v15_t('Filteri')); ?></button>
     </div>
 
     <div class="filters-overlay" id="filters-overlay"></div>
     <div class="filters-panel" id="filters-panel">
       <div class="filters-panel-head">
-        <span class="filters-panel-title">Filteri</span>
-        <button class="filters-close" id="filters-close" type="button" aria-label="Zatvori filtere">×</button>
+        <span class="filters-panel-title"><?php echo esc_html(v15_t('Filteri')); ?></span>
+        <button class="filters-close" id="filters-close" type="button" aria-label="<?php echo esc_attr(v15_t('Zatvori filtere')); ?>">×</button>
       </div>
 
       <?php v15_render_category_pills(); ?>
 
-      <div class="filter-group-label">Poreklo</div>
+      <div class="filter-group-label"><?php echo esc_html(v15_t('Poreklo')); ?></div>
       <div class="filter-dropdowns">
         <?php foreach (v15_filter_attributes() as $a) {
             v15_render_attr_dropdown($a['label'], $a['taxonomy'], $a['filter_var'], $a['qtype_var'], $a['searchable']);
@@ -324,8 +328,8 @@ function v15_render_filters() {
       <?php v15_render_price_pills(); ?>
 
       <div class="filters-panel-actions">
-        <a class="filters-reset" href="<?php echo esc_url(v15_shop_base_url()); ?>" rel="nofollow">Poništi sve</a>
-        <button class="filters-apply" id="filters-apply" type="button">Prikaži rezultate</button>
+        <a class="filters-reset" href="<?php echo esc_url(v15_shop_base_url()); ?>" rel="nofollow"><?php echo esc_html(v15_t('Poništi sve')); ?></a>
+        <button class="filters-apply" id="filters-apply" type="button"><?php echo esc_html(v15_t('Prikaži rezultate')); ?></button>
       </div>
     </div>
 

@@ -8,11 +8,11 @@ get_header();
 
 <section class="hero" id="home">
   <div class="hero-content">
-    <p class="hero-tagline">Vinoteka &middot; Loznica</p>
-    <h1 class="hero-title">Vino bira<br><span class="hero-accent">strpljive.</span></h1>
-    <p class="hero-description">Više od 400 pažljivo odabranih etiketa iz Srbije i sveta.</p>
+    <p class="hero-tagline"><?php echo esc_html(v15_t('Vinoteka · Loznica')); ?></p>
+    <h1 class="hero-title"><?php echo esc_html(v15_t('Vino bira')); ?><br><span class="hero-accent"><?php echo esc_html(v15_t('strpljive.')); ?></span></h1>
+    <p class="hero-description"><?php echo esc_html(v15_t('Više od 400 pažljivo odabranih etiketa iz Srbije i sveta.')); ?></p>
     <div class="hero-cta">
-      <a href="<?php echo esc_url(home_url('/shop/')); ?>" class="btn btn-outline">Pogledaj ponudu</a>
+      <a href="<?php echo esc_url(home_url('/shop/')); ?>" class="btn btn-outline"><?php echo esc_html(v15_t('Pogledaj ponudu')); ?></a>
     </div>
   </div>
 </section>
@@ -21,8 +21,8 @@ get_header();
 <section class="featured" id="featured">
   <div class="container">
     <div class="section-header">
-      <span class="section-label">Preporuka kuće</span>
-      <h2 class="section-title">Istaknuta vina</h2>
+      <span class="section-label"><?php echo esc_html(v15_t('Preporuka kuće')); ?></span>
+      <h2 class="section-title"><?php echo esc_html(v15_t('Istaknuta vina')); ?></h2>
     </div>
     <ul class="products">
       <?php
@@ -39,7 +39,7 @@ get_header();
       ?>
     </ul>
     <div class="featured-cta" style="text-align:center;margin-top:40px;">
-      <a href="<?php echo esc_url(home_url('/shop/')); ?>" class="btn btn-secondary">Pogledaj celokupnu ponudu</a>
+      <a href="<?php echo esc_url(home_url('/shop/')); ?>" class="btn btn-secondary"><?php echo esc_html(v15_t('Pogledaj celokupnu ponudu')); ?></a>
     </div>
   </div>
 </section>
@@ -48,7 +48,7 @@ get_header();
 <section class="quote-section">
   <div class="container">
     <blockquote class="wine-quote">
-      <p>Vino je poezija u boci.</p>
+      <p><?php echo esc_html(v15_t('Vino je poezija u boci.')); ?></p>
       <cite>&mdash; Clifton Fadiman</cite>
     </blockquote>
   </div>
