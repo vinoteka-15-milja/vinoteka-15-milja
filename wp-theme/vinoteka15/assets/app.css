@@ -1860,6 +1860,22 @@ body.no-scroll {
   font-style: italic;
 }
 
+/* Pravni linkovi (Uslovi/Reklamacije/Privatnost/Plaćanje) */
+.footer-legal {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px 20px;
+  margin-top: 12px;
+}
+.footer-legal a {
+  font-size: var(--fs-xs);
+  color: rgba(250, 246, 240, 0.55);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+.footer-legal a:hover { color: var(--clr-gold); }
+
 
 /* ============================================
    BACK TO TOP

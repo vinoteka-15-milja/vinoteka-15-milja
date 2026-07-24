@@ -14,6 +14,7 @@ function v15_run_setup_migrations() {
     v15_setup_cod();
     v15_setup_local_pickup();
     v15_setup_pages();
+    v15_setup_legal_pages();
     v15_setup_nav_menu();
     v15_cleanup_defaults();
 }
@@ -124,6 +125,86 @@ function v15_setup_pages() {
     }
 
     update_option('v15_pages_setup', 'done');
+}
+
+/** Pravne stranice (Uslovi/Reklamacije/Privatnost/Plaćanje) — nacrti, idempotentno.
+    NB: placeholderи [Naziv firme]/[PIB]/[Matični broj]/[PDV] popunjava vlasnik. */
+function v15_setup_legal_pages() {
+    if (get_option('v15_legal_pages') === 'done') return;
+
+    $uslovi = <<<HTML
+<p>Ovi uslovi korišćenja odnose se na internet prodavnicu Vinoteka 15 Milja (u daljem tekstu: „Prodavnica").</p>
+<h3>Prodavac</h3>
+<p>[Naziv firme], Žikice Jovanovića 9, 15300 Loznica<br>PIB: [PIB] · Matični broj: [Matični broj]<br>Kontakt: +381 63 367 514 · vinoteka15milja@gmail.com</p>
+<h3>Poručivanje</h3>
+<p>Porudžbina se kreira dodavanjem proizvoda u korpu i popunjavanjem podataka pri plaćanju. Ugovor o prodaji smatra se zaključenim kada Prodavac potvrdi porudžbinu.</p>
+<h3>Cene</h3>
+<p>Sve cene iskazane su u dinarima (RSD). [Napomena o PDV-u: u sistemu PDV-a / nije u sistemu PDV-a.] Cene važe u trenutku poručivanja.</p>
+<h3>Načini plaćanja</h3>
+<p>Plaćanje je moguće pouzećem (gotovinom pri preuzimanju ili dostavi) i platnim karticama putem bezbedne stranice banke. Detalji: <a href="/placanje/">Plaćanje i bezbednost</a>.</p>
+<h3>Isporuka</h3>
+<p>Isporuka se vrši na teritoriji Republike Srbije, kurirskom službom ili ličnim preuzimanjem u vinoteci. Rok i troškovi isporuke prikazani su pri poručivanju.</p>
+<h3>Prodaja alkohola</h3>
+<p>Prodaja alkoholnih pića licima mlađim od 18 godina je zabranjena. Poručivanjem potvrđujete da imate 18 ili više godina.</p>
+<h3>Odustanak i reklamacije</h3>
+<p>Pravo na odustanak od ugovora i postupak reklamacije opisani su na stranici <a href="/reklamacije/">Reklamacije i povraćaj</a>.</p>
+HTML;
+
+    $reklamacije = <<<HTML
+<p>U skladu sa Zakonom o zaštiti potrošača, potrošač ima pravo na reklamaciju i na odustanak od ugovora zaključenog na daljinu.</p>
+<h3>Pravo na odustanak (14 dana)</h3>
+<p>Potrošač ima pravo da u roku od 14 dana od dana prijema robe odustane od ugovora bez navođenja razloga. Izjavu o odustanku pošaljite na vinoteka15milja@gmail.com. Troškove vraćanja robe snosi potrošač, osim ako je isporučena pogrešna ili oštećena roba.</p>
+<h3>Reklamacija</h3>
+<p>Reklamaciju možete izjaviti na vinoteka15milja@gmail.com ili lično u vinoteci, uz račun ili dokaz o kupovini. Odgovor na reklamaciju dostavljamo u roku od 8 dana, a rešavamo je u zakonskom roku od 15 dana od dana prijema.</p>
+<h3>Povraćaj sredstava</h3>
+<p>U slučaju vraćanja robe i povraćaja sredstava kupcu koji je prethodno platio platnom karticom, povraćaj se vrši isključivo preko VISA/Mastercard/Maestro metoda plaćanja, na isti račun sa kog je plaćanje izvršeno, u skladu sa pravilima kartičarskih organizacija i banke.</p>
+<h3>Izuzeci</h3>
+<p>Otvorena alkoholna pića se, iz higijenskih i zakonskih razloga, ne mogu vratiti osim u slučaju nedostatka (npr. neispravan proizvod).</p>
+HTML;
+
+    $privatnost = <<<HTML
+<p>Vinoteka 15 Milja poštuje privatnost korisnika i postupa u skladu sa Zakonom o zaštiti podataka o ličnosti.</p>
+<h3>Koje podatke prikupljamo</h3>
+<p>Prilikom poručivanja prikupljamo: ime i prezime, adresu za isporuku, broj telefona i email adresu. Podatke koristimo isključivo za obradu i isporuku porudžbine i komunikaciju u vezi sa njom.</p>
+<h3>Podaci o plaćanju</h3>
+<p>Prilikom plaćanja karticom, podatke o kartici unosite na bezbednoj stranici banke/procesora. Ti podaci se ne čuvaju na našem sajtu niti su nam dostupni.</p>
+<h3>Ustupanje trećim licima</h3>
+<p>Podatke delimo samo sa kurirskom službom (radi isporuke) i bankom/procesorom plaćanja (radi naplate). Ne prodajemo i ne ustupamo podatke u druge svrhe.</p>
+<h3>Vaša prava</h3>
+<p>Imate pravo na uvid, ispravku i brisanje svojih podataka. Zahtev pošaljite na vinoteka15milja@gmail.com.</p>
+<h3>Kolačići</h3>
+<p>Sajt koristi kolačiće neophodne za rad korpe i pamćenje izbora jezika.</p>
+HTML;
+
+    $placanje = <<<HTML
+<h3>Načini plaćanja</h3>
+<p>Plaćanje je moguće pouzećem i platnim karticama (VISA, Mastercard, Maestro, DinaCard) putem bezbedne stranice banke.</p>
+<h3>Bezbednost plaćanja</h3>
+<p>Sva plaćanja karticom obavljaju se na bezbednoj (3D Secure) stranici banke. Vinoteka 15 Milja nema pristup podacima o vašoj platnoj kartici. Prenos podataka zaštićen je SSL enkripcijom.</p>
+<h3>Valuta plaćanja</h3>
+<p>Sva plaćanja obavljaju se u dinarima (RSD).</p>
+<h3>Izjava o konverziji valuta</h3>
+<p>Sva plaćanja biće izvršena u dinarima (RSD). Ukoliko se plaća karticom izdatom u inostranstvu, iznos transakcije biće konvertovan u lokalnu valutu korisnika kartice prema kursu kartičarske organizacije, o čemu Prodavac ne raspolaže podacima. Kao rezultat konverzije, moguća je manja razlika u odnosu na originalnu cenu.</p>
+HTML;
+
+    $pages = array(
+        'uslovi-koriscenja' => array('Uslovi korišćenja', $uslovi),
+        'reklamacije'       => array('Reklamacije i povraćaj', $reklamacije),
+        'privatnost'        => array('Politika privatnosti', $privatnost),
+        'placanje'          => array('Plaćanje i bezbednost', $placanje),
+    );
+    foreach ($pages as $slug => $p) {
+        if (!get_page_by_path($slug)) {
+            wp_insert_post(array(
+                'post_title'   => $p[0],
+                'post_name'    => $slug,
+                'post_status'  => 'publish',
+                'post_type'    => 'page',
+                'post_content' => $p[1],
+            ));
+        }
+    }
+    update_option('v15_legal_pages', 'done');
 }
 
 /** Editabilan primary meni „Glavni meni" (idempotentno). Pozvati POSLE v15_setup_pages. */

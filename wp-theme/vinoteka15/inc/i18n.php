@@ -62,6 +62,11 @@ $GLOBALS['V15_EN'] = array(
     '15300 Loznica, Srbija' => '15300 Loznica, Serbia',
     'Vinoteka 15 Milja. Sva prava zadržana.' => 'Vinoteka 15 Milja. All rights reserved.',
     'Uživajte u vinu odgovorno. Zabranjena prodaja licima mlađim od 18 godina.' => 'Enjoy wine responsibly. Sale to persons under 18 is prohibited.',
+    'Pravne informacije' => 'Legal',
+    'Uslovi korišćenja' => 'Terms of Service',
+    'Reklamacije' => 'Returns',
+    'Politika privatnosti' => 'Privacy Policy',
+    'Plaćanje i bezbednost' => 'Payment & Security',
     // Age gate
     'Dobrodošli' => 'Welcome',
     'Ovaj sajt sadrži informacije o alkoholnim pićima.' => 'This site contains information about alcoholic beverages.',

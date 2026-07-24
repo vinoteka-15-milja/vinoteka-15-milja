@@ -24,6 +24,12 @@
     </div>
     <div class="footer-bottom">
       <p>&copy; <?php echo date('Y'); ?> <?php echo esc_html(v15_t('Vinoteka 15 Milja. Sva prava zadržana.')); ?></p>
+      <nav class="footer-legal" aria-label="<?php echo esc_attr(v15_t('Pravne informacije')); ?>">
+        <a href="<?php echo esc_url(home_url('/uslovi-koriscenja/')); ?>"><?php echo esc_html(v15_t('Uslovi korišćenja')); ?></a>
+        <a href="<?php echo esc_url(home_url('/reklamacije/')); ?>"><?php echo esc_html(v15_t('Reklamacije')); ?></a>
+        <a href="<?php echo esc_url(home_url('/privatnost/')); ?>"><?php echo esc_html(v15_t('Politika privatnosti')); ?></a>
+        <a href="<?php echo esc_url(home_url('/placanje/')); ?>"><?php echo esc_html(v15_t('Plaćanje i bezbednost')); ?></a>
+      </nav>
       <p class="footer-note"><?php echo esc_html(v15_t('Uživajte u vinu odgovorno. Zabranjena prodaja licima mlađim od 18 godina.')); ?></p>
     </div>
   </div>

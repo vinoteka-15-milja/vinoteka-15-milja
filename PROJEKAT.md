@@ -35,7 +35,11 @@ _Poslednje ažuriranje: 2026-06-23_
 3. ~~Meni~~ **URAĐENO (2026-06-23):** kreirane strane **O nama** i **Kontakt** (kontakt ima Maps embed preko `[v15_map]` shortcode-a), editabilan **primary meni „Glavni meni"** (Početna/Vina/O nama/Kontakt) dodeljen, obrisani Sample Page + Hello world. Migracije u `inc/setup.php`. (Logo u headeru svesno netaknut — zlatni grozd `logo.png` ostaje.)
 4. ~~Brendiran age gate~~ **URAĐENO (2026-06-23):** custom 18+ overlay (reuse `app.css` + statički markup/JS), po sesiji (`sessionStorage`), „Da" → ulaz, „Ne" → „Pristup odbijen"; markup u `header.php` (+ inline anti-flash), JS u `theme.js`. Spec/plan: `docs/superpowers/{specs,plans}/2026-06-23-woo-meni-age-gate*.md`.
 5. **Faza 3:** plaćanje (pouzeće COD + uplata na račun BACS), dostava po težini (Flexible Shipping, zona Srbija + lično preuzimanje), pravne stranice (impressum/PIB/MB, uslovi, reklamacije, privatnost)
-6. **Faza 4:** Raiffeisen kartica (Monri/AllSecure plugin) kad banka da sandbox podatke
+6. **Faza 4 — Raiffeisen kartično plaćanje (POKRENUTO 2026-07-24, čeka banku):**
+   - **Preduslovi kod banke:** e-commerce merchant ugovor (internet acquiring) sa Raiffeisen-om; banka dodeljuje **procesor/gateway** (u Srbiji najčešće **AllSecure/Payten** ili **Monri**). Banka traži: PIB, MB, šifra delatnosti, tekući račun, procenjeni promet, sajt na HTTPS i vidljiv (ne coming-soon), pravne stranice.
+   - **Od banke dobiti (pa javiti):** (1) koji procesor + dokumentacija, (2) TEST/sandbox kredencijali (Merchant ID + tajni ključ) + test kartice, (3) kasnije PROD kredencijali.
+   - **Integracija (kad stigne TEST):** hostovana stranica za plaćanje (PCI najlakše) — Monri ima zvanični WooCommerce plugin; AllSecure/Payten WooCommerce integracija — biramo prema procesoru. Pouzeće ostaje uz karticu. Kredencijali van gita (`.secrets-wp.md`). Test na staging-u → PROD uz pažljivo puštanje.
+   - **URAĐENO (2026-07-24):** pravne stranice kreirane (`inc/setup.php` → `v15_setup_legal_pages`): **Uslovi korišćenja, Reklamacije i povraćaj, Politika privatnosti, Plaćanje i bezbednost** (sa Izjavom o konverziji valuta). Povezane u footer (`.footer-legal`). Nacrti — vlasnik popunjava placeholdere [Naziv firme]/[PIB]/[Matični broj]/[PDV]. Spec: `docs/superpowers/specs/` (Faza 4 se planira kad stignu kredencijali).
 7. **Faza 5:** prebaciti staging → `15milja.com` (klon/migracija URL-ova), Live, LiteSpeed keš ON
 
 **Ključne zamke (da se ne ponavljaju):**
