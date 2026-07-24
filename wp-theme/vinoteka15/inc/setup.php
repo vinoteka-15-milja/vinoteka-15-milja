@@ -130,7 +130,8 @@ function v15_setup_pages() {
 /** Pravne stranice (Uslovi/Reklamacije/Privatnost/Plaćanje) — nacrti, idempotentno.
     NB: placeholderи [Naziv firme]/[PIB]/[Matični broj]/[PDV] popunjava vlasnik. */
 function v15_setup_legal_pages() {
-    if (get_option('v15_legal_pages') === 'done') return;
+    $ver = 2; // bump kad se menja sadržaj pravnih strana → ažurira postojeće strane
+    if ((int) get_option('v15_legal_pages_ver') >= $ver) return;
 
     $uslovi = <<<HTML
 <p>Ovi uslovi korišćenja odnose se na internet prodavnicu Vinoteka 15 Milja (u daljem tekstu: „Prodavnica").</p>
@@ -143,11 +144,17 @@ function v15_setup_legal_pages() {
 <h3>Načini plaćanja</h3>
 <p>Plaćanje je moguće pouzećem (gotovinom pri preuzimanju ili dostavi) i platnim karticama putem bezbedne stranice banke. Detalji: <a href="/placanje/">Plaćanje i bezbednost</a>.</p>
 <h3>Isporuka</h3>
-<p>Isporuka se vrši na teritoriji Republike Srbije, kurirskom službom ili ličnim preuzimanjem u vinoteci. Rok i troškovi isporuke prikazani su pri poručivanju.</p>
+<p>Isporuka se vrši na teritoriji Republike Srbije, kurirskom službom ili ličnim preuzimanjem u vinoteci. Roba se isporučuje u roku od tri (3) radna dana od potvrde porudžbine. Ako poručeni proizvod nije dostupan, blagovremeno ćemo vas obavestiti. Rok i troškovi isporuke prikazani su pri poručivanju.</p>
+<h3>Saobraznost robe i garancija</h3>
+<p>Prodavac odgovara za saobraznost robe ugovoru (zakonska garancija) u skladu sa Zakonom o zaštiti potrošača. Saobraznost i eventualna ugovorna garancija važe u rokovima određenim važećim propisima Republike Srbije.</p>
+<h3>Odgovornost</h3>
+<p>Trudimo se da opisi i fotografije proizvoda budu tačni, ali ne odgovaramo za eventualne nenamerne greške u opisu ili prikazu. Ako je greška bitna za odluku o kupovini, kupac ima pravo da odustane od porudžbine.</p>
 <h3>Prodaja alkohola</h3>
 <p>Prodaja alkoholnih pića licima mlađim od 18 godina je zabranjena. Poručivanjem potvrđujete da imate 18 ili više godina.</p>
 <h3>Odustanak i reklamacije</h3>
 <p>Pravo na odustanak od ugovora i postupak reklamacije opisani su na stranici <a href="/reklamacije/">Reklamacije i povraćaj</a>.</p>
+<h3>Izmene uslova</h3>
+<p>Prodavac zadržava pravo da izmeni ove uslove korišćenja. Izmene stupaju na snagu objavljivanjem na ovoj stranici.</p>
 HTML;
 
     $reklamacije = <<<HTML
@@ -194,7 +201,11 @@ HTML;
         'placanje'          => array('Plaćanje i bezbednost', $placanje),
     );
     foreach ($pages as $slug => $p) {
-        if (!get_page_by_path($slug)) {
+        $existing = get_page_by_path($slug);
+        if ($existing) {
+            // Osveži sadržaj (strane su auto-generisane; menjaju se ovde, ne u adminu)
+            wp_update_post(array('ID' => $existing->ID, 'post_content' => $p[1]));
+        } else {
             wp_insert_post(array(
                 'post_title'   => $p[0],
                 'post_name'    => $slug,
@@ -204,7 +215,7 @@ HTML;
             ));
         }
     }
-    update_option('v15_legal_pages', 'done');
+    update_option('v15_legal_pages_ver', $ver);
 }
 
 /** Editabilan primary meni „Glavni meni" (idempotentno). Pozvati POSLE v15_setup_pages. */
