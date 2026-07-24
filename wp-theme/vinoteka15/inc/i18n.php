@@ -255,30 +255,100 @@ add_filter('get_term', function ($term) {
     return $term;
 });
 
-/* Strane O nama / Kontakt — EN sadržaj u EN modu */
+/* ---------------------------------------------------------------------------
+ * FIRMSKI PODACI — popuni jednom, primenjuje se na SR (DB) i EN pravne stranice.
+ * (Token-zamena ispod menja placeholdere u sadržaju strana pri renderu.)
+ * ------------------------------------------------------------------------- */
+$GLOBALS['V15_FIRMA'] = array(
+    'naziv'  => '[Naziv firme]',      // pun pravni naziv (npr. „... d.o.o." ili „PR ...")
+    'pib'    => '[PIB]',              // poreski identifikacioni broj
+    'mb'     => '[Matični broj]',     // matični broj privrednog subjekta
+    'pdv_sr' => '[Napomena o PDV-u: u sistemu PDV-a / nije u sistemu PDV-a.]',
+    'pdv_en' => '[VAT note]',
+);
+
+/* Zameni firmske placeholdere u sadržaju strana (radi za SR-DB i EN-filter). Prioritet posle EN-swap-a. */
 add_filter('the_content', function ($content) {
-    if (!v15_is_en() || is_admin()) return $content;
-    if (is_page('o-nama')) {
-        return "<p>Vinoteka 15 Milja is your wine corner in the heart of Loznica — a place where every bottle tells its story. "
-             . "From the finest Serbian varietals to carefully selected labels from around the world, our collection is made for true wine lovers.</p>\n"
-             . "<p>We believe good wine brings people together and makes every moment special. Drop by, ask for our advice, and find your next favourite bottle.</p>";
+    if (is_admin()) return $content;
+    $f = $GLOBALS['V15_FIRMA'];
+    $content = str_replace(
+        array('[Naziv firme]', '[PIB]', '[Matični broj]'),
+        array($f['naziv'], $f['pib'], $f['mb']),
+        $content
+    );
+    $content = str_replace('[Napomena o PDV-u: u sistemu PDV-a / nije u sistemu PDV-a.]', $f['pdv_sr'], $content);
+    $content = str_replace('[PDV]', $f['pdv_en'], $content);
+    return $content;
+}, 30);
+
+/* EN sadržaj strana (O nama / Kontakt / pravne) u EN modu. */
+function v15_en_page_content($slug) {
+    switch ($slug) {
+        case 'o-nama':
+            return "<p>Vinoteka 15 Milja is your wine corner in the heart of Loznica — a place where every bottle tells its story. "
+                 . "From the finest Serbian varietals to carefully selected labels from around the world, our collection is made for true wine lovers.</p>\n"
+                 . "<p>We believe good wine brings people together and makes every moment special. Drop by, ask for our advice, and find your next favourite bottle.</p>";
+        case 'kontakt':
+            return "<p><strong>Address:</strong> Žikice Jovanovića 9, 15300 Loznica</p>\n"
+                 . "<p><strong>Phone:</strong> <a href=\"tel:+38163367514\">+381 63 367 514</a></p>\n"
+                 . "<p><strong>Email:</strong> <a href=\"mailto:vinoteka15milja@gmail.com\">vinoteka15milja@gmail.com</a></p>\n"
+                 . "<p><strong>Opening hours:</strong> Mon–Fri 9am–8pm · Sat 9am–3pm · Sun: closed</p>\n"
+                 . do_shortcode('[v15_map]');
+        case 'uslovi-koriscenja':
+            return "<p>These terms of service apply to the Vinoteka 15 Milja online shop (the \"Shop\").</p>\n"
+                 . "<h3>Seller</h3>\n<p>[Naziv firme], Žikice Jovanovića 9, 15300 Loznica, Serbia<br>Tax ID (PIB): [PIB] · Registration No.: [Matični broj]<br>Contact: +381 63 367 514 · vinoteka15milja@gmail.com</p>\n"
+                 . "<h3>Ordering</h3>\n<p>An order is created by adding products to the cart and entering your details at checkout. The sales contract is concluded when the Seller confirms the order.</p>\n"
+                 . "<h3>Prices</h3>\n<p>All prices are shown in Serbian dinars (RSD). [PDV] Prices are valid at the time of ordering.</p>\n"
+                 . "<h3>Payment methods</h3>\n<p>Payment is possible by cash on delivery and by payment cards via the bank's secure page. Details: <a href=\"/placanje/\">Payment &amp; Security</a>.</p>\n"
+                 . "<h3>Delivery</h3>\n<p>Delivery is made within the Republic of Serbia, by courier or in-store pickup. Delivery time and cost are shown at checkout.</p>\n"
+                 . "<h3>Sale of alcohol</h3>\n<p>The sale of alcoholic beverages to persons under 18 is prohibited. By ordering, you confirm that you are 18 or older.</p>\n"
+                 . "<h3>Withdrawal and complaints</h3>\n<p>The right of withdrawal and the complaints procedure are described on the <a href=\"/reklamacije/\">Returns</a> page.</p>";
+        case 'reklamacije':
+            return "<p>In accordance with the Consumer Protection Act, the consumer has the right to file a complaint and to withdraw from a distance contract.</p>\n"
+                 . "<h3>Right of withdrawal (14 days)</h3>\n<p>The consumer has the right to withdraw from the contract within 14 days of receiving the goods, without giving a reason. Send the withdrawal statement to vinoteka15milja@gmail.com. The cost of returning the goods is borne by the consumer, unless the wrong or damaged goods were delivered.</p>\n"
+                 . "<h3>Complaints</h3>\n<p>You may file a complaint at vinoteka15milja@gmail.com or in person at the shop, with the receipt or proof of purchase. We respond to complaints within 8 days and resolve them within the legal deadline of 15 days from receipt.</p>\n"
+                 . "<h3>Refunds</h3>\n<p>When goods are returned and a refund is due to a customer who paid by card, the refund is made exclusively via VISA/Mastercard/Maestro payment methods, to the same account used for payment, in accordance with card scheme and bank rules.</p>\n"
+                 . "<h3>Exceptions</h3>\n<p>For hygiene and legal reasons, opened alcoholic beverages cannot be returned except in case of a defect (e.g. a faulty product).</p>";
+        case 'privatnost':
+            return "<p>Vinoteka 15 Milja respects users' privacy and acts in accordance with the Personal Data Protection Act.</p>\n"
+                 . "<h3>What data we collect</h3>\n<p>When ordering, we collect: first and last name, delivery address, phone number and email address. We use this data solely to process and deliver your order and to communicate about it.</p>\n"
+                 . "<h3>Payment data</h3>\n<p>When paying by card, you enter your card details on the secure page of the bank/processor. This data is not stored on our website nor is it accessible to us.</p>\n"
+                 . "<h3>Sharing with third parties</h3>\n<p>We share data only with the courier service (for delivery) and the bank/payment processor (for charging). We do not sell or share data for any other purpose.</p>\n"
+                 . "<h3>Your rights</h3>\n<p>You have the right to access, correct and delete your data. Send your request to vinoteka15milja@gmail.com.</p>\n"
+                 . "<h3>Cookies</h3>\n<p>The site uses cookies necessary for the cart to function and to remember your language choice.</p>";
+        case 'placanje':
+            return "<h3>Payment methods</h3>\n<p>Payment is possible by cash on delivery and by payment cards (VISA, Mastercard, Maestro, DinaCard) via the bank's secure page.</p>\n"
+                 . "<h3>Payment security</h3>\n<p>All card payments are processed on the bank's secure (3D Secure) page. Vinoteka 15 Milja has no access to your card details. Data transfer is protected by SSL encryption.</p>\n"
+                 . "<h3>Payment currency</h3>\n<p>All payments are made in Serbian dinars (RSD).</p>\n"
+                 . "<h3>Currency conversion statement</h3>\n<p>All payments will be made in Serbian dinars (RSD). If a card issued abroad is used, the transaction amount will be converted into the cardholder's local currency according to the exchange rate of the card organization, which the Seller has no information about. As a result of the conversion, a small difference from the original price is possible.</p>";
     }
-    if (is_page('kontakt')) {
-        return "<p><strong>Address:</strong> Žikice Jovanovića 9, 15300 Loznica</p>\n"
-             . "<p><strong>Phone:</strong> <a href=\"tel:+38163367514\">+381 63 367 514</a></p>\n"
-             . "<p><strong>Email:</strong> <a href=\"mailto:vinoteka15milja@gmail.com\">vinoteka15milja@gmail.com</a></p>\n"
-             . "<p><strong>Opening hours:</strong> Mon–Fri 9am–8pm · Sat 9am–3pm · Sun: closed</p>\n"
-             . do_shortcode('[v15_map]');
+    return null;
+}
+
+/* Strane (O nama / Kontakt / pravne) — EN sadržaj u EN modu (prioritet 10, pre token-zamene). */
+add_filter('the_content', function ($content) {
+    if (!v15_is_en() || is_admin() || !is_page()) return $content;
+    foreach (array('o-nama', 'kontakt', 'uslovi-koriscenja', 'reklamacije', 'privatnost', 'placanje') as $slug) {
+        if (is_page($slug)) {
+            $en = v15_en_page_content($slug);
+            if ($en !== null) return $en;
+        }
     }
     return $content;
-});
+}, 10);
 
-/* Naslov strane (O nama/Kontakt) u EN */
+/* Naslovi strana u EN */
 add_filter('the_title', function ($title, $post_id = 0) {
     if (!v15_is_en() || is_admin()) return $title;
-    if ($title === 'O nama') return 'About';
-    if ($title === 'Kontakt') return 'Contact';
-    return $title;
+    static $map = array(
+        'O nama' => 'About',
+        'Kontakt' => 'Contact',
+        'Uslovi korišćenja' => 'Terms of Service',
+        'Reklamacije i povraćaj' => 'Returns',
+        'Politika privatnosti' => 'Privacy Policy',
+        'Plaćanje i bezbednost' => 'Payment & Security',
+    );
+    return $map[$title] ?? $title;
 }, 10, 2);
 
 /* COD gateway titula/opis u EN */
