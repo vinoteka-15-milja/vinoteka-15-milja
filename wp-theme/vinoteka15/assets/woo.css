@@ -84,26 +84,34 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-/* Cena + dugme uvek prikovani na dno kartice */
+/* Cena + dugme uvek prikovani na dno kartice.
+   flex-wrap → na uskoj kartici (npr. related 5-u-red) dugme padne u novi red
+   umesto da se skupi i iseče tekst („U KOR"). */
 .wine-card .wine-card-footer {
   margin-top: auto;
-  gap: 12px;
+  gap: 10px 12px;
+  flex-wrap: wrap;
 }
+.wine-card .wine-card-footer .wine-price { flex: 0 1 auto; }
 
-/* ---- "U korpu" dugme: elegantni zlatni pill, pojavljuje se na hover ---- */
+/* ---- "U korpu" dugme: kompaktni zlatni pill, pojavljuje se na hover ----
+   Kompaktno (bez širokog letter-spacing-a, uža ivica) da staje uz cenu u jednom redu
+   na shop karticama; flex-wrap iznad je sigurnosna mreža za najuže (related). */
 .wine-card-footer .btn {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 6px;
   width: auto;
-  padding: 10px 18px;
+  flex: 0 0 auto;      /* ne skupljaj dugme */
+  overflow: visible;   /* ne seci tekst */
+  padding: 9px 14px;
   border-radius: 999px;
   font-size: var(--fs-xs);
-  letter-spacing: 1.2px;
+  letter-spacing: .3px;
   white-space: nowrap;
   transition: opacity .3s ease, transform .3s ease, filter .2s ease, box-shadow .2s ease, background .2s ease;
 }
-.wine-card-footer .btn svg { width: 15px; height: 15px; flex: none; }
+.wine-card-footer .btn svg { width: 14px; height: 14px; flex: none; }
 
 /* Primarno (U korpu) → topli zlatni gradijent, taman tekst */
 .wine-card-footer .btn-primary {
