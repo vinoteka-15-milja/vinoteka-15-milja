@@ -10,6 +10,7 @@ add_action('admin_init', 'v15_run_setup_migrations');
 function v15_run_setup_migrations() {
     if (!function_exists('wc_get_page_id')) return; // WooCommerce mora biti aktivan
     v15_setup_language();
+    v15_setup_email_sender();
     v15_setup_classic_pages();
     v15_setup_cod();
     v15_setup_local_pickup();
@@ -25,6 +26,27 @@ function v15_setup_language() {
     if (get_option('v15_lang_base') === 'en') return;
     update_option('WPLANG', ''); // '' => en_US (podrazumevano)
     update_option('v15_lang_base', 'en');
+}
+
+/** WooCommerce email pošiljalac + primalac porudžbina = office@15milja.com (idempotentno). */
+function v15_setup_email_sender() {
+    if (get_option('v15_email_sender') === 'done') return;
+    $office = 'office@15milja.com';
+
+    // „From" na svim WC mejlovima
+    update_option('woocommerce_email_from_address', $office);
+    update_option('woocommerce_email_from_name', 'Vinoteka 15 Milja');
+
+    // Kopije porudžbina (admin obaveštenja) stižu na office@
+    foreach (array('new_order', 'cancelled_order', 'failed_order') as $email_id) {
+        $key = 'woocommerce_' . $email_id . '_settings';
+        $s = get_option($key, array());
+        if (!is_array($s)) $s = array();
+        $s['recipient'] = $office;
+        update_option($key, $s);
+    }
+
+    update_option('v15_email_sender', 'done');
 }
 
 /** /cart/ i /checkout/ sa blokova na klasik shortcode (idempotentno). */
