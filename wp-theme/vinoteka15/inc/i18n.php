@@ -224,6 +224,27 @@ $GLOBALS['V15_WC_SR'] = array(
     'Sort by latest' => 'Najnovije',
     'Sort by price: low to high' => 'Cena: rastuće',
     'Sort by price: high to low' => 'Cena: opadajuće',
+
+    // ---- Email porudžbina (heading/greeting/intro/labels) ----
+    'Thank you for your order' => 'Hvala na porudžbini',
+    'Hi %s,' => 'Zdravo %s,',
+    'Hi,' => 'Zdravo,',
+    'Just to let you know &mdash; we’ve received your order, and it is now being processed.' => 'Obaveštavamo vas da smo primili vašu porudžbinu i da je trenutno obrađujemo.',
+    'Here’s a reminder of what you’ve ordered:' => 'Podsećamo vas šta ste poručili:',
+    'We have finished processing your order.' => 'Vaša porudžbina je obrađena i spremna.',
+    'You’ve received the following order from %s:' => 'Primili ste sledeću porudžbinu od %s:',
+    'You’ve received a new order from %s:' => 'Primili ste novu porudžbinu od %s:',
+    'Order summary' => 'Pregled porudžbine',
+    'Order #%s' => 'Porudžbina #%s',
+    '[Order #%s]' => '[Porudžbina #%s]',
+    'Note:' => 'Napomena:',
+    'Customer note' => 'Napomena kupca',
+    'Billing address' => 'Adresa za naplatu',
+    'Shipping address' => 'Adresa za dostavu',
+    'Subtotal:' => 'Međuzbir:',
+    'Shipping:' => 'Dostava:',
+    'Total:' => 'Ukupno:',
+    'Thanks again! If you need any help with your order, please contact us at {email}.' => 'Hvala još jednom! Za pomoć oko porudžbine kontaktirajte nas na {email}.',
 );
 
 /* SR overlay za WooCommerce (EN → srpska latinica). U EN modu: no-op. */

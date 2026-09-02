@@ -11,6 +11,7 @@ function v15_run_setup_migrations() {
     if (!function_exists('wc_get_page_id')) return; // WooCommerce mora biti aktivan
     v15_setup_language();
     v15_setup_email_sender();
+    v15_setup_email_design();
     v15_setup_classic_pages();
     v15_setup_cod();
     v15_setup_local_pickup();
@@ -47,6 +48,51 @@ function v15_setup_email_sender() {
     }
 
     update_option('v15_email_sender', 'done');
+}
+
+/** Dizajn email-a (boje/logo/footer) + srpski naslovi/subjekti. Versionisano. */
+function v15_setup_email_design() {
+    $ver = 2;
+    if ((int) get_option('v15_email_design_ver') >= $ver) return;
+
+    // Datum: srpski numerički (bez engleskog naziva meseca) — npr. 2.9.2026.
+    update_option('date_format', 'j.n.Y.');
+
+    // Boje: tamni okvir/header (zlatni logo puca), bela sadržajna kartica, taman tekst
+    update_option('woocommerce_email_background_color', '#1a1416');
+    update_option('woocommerce_email_base_color', '#1a1416');
+    update_option('woocommerce_email_body_background_color', '#ffffff');
+    update_option('woocommerce_email_text_color', '#2a2125');
+    update_option('woocommerce_email_header_image', get_stylesheet_directory_uri() . '/assets/email-logo.png');
+    update_option('woocommerce_email_footer_text',
+        'Vinoteka 15 Milja &middot; Žikice Jovanovića 9, Loznica &middot; +381 63 367 514');
+
+    // Srpski naslovi/subjekti/dodatni tekst po tipu mejla (čuva postojeća polja: enabled/recipient)
+    $set = function ($key, $fields) {
+        $s = get_option($key, array());
+        if (!is_array($s)) $s = array();
+        update_option($key, array_merge($s, $fields));
+    };
+    $set('woocommerce_customer_processing_order_settings', array(
+        'heading'            => 'Hvala na porudžbini',
+        'subject'            => 'Vaša porudžbina #{order_number} je primljena',
+        'additional_content' => 'Hvala još jednom! Za pomoć oko porudžbine kontaktirajte nas na office@15milja.com.',
+    ));
+    $set('woocommerce_customer_completed_order_settings', array(
+        'heading'            => 'Vaša porudžbina je isporučena',
+        'subject'            => 'Vaša porudžbina #{order_number} je završena',
+        'additional_content' => 'Hvala na poverenju! Za sva pitanja tu smo na office@15milja.com.',
+    ));
+    $set('woocommerce_customer_on_hold_order_settings', array(
+        'heading' => 'Porudžbina primljena',
+        'subject' => 'Vaša porudžbina #{order_number} je na čekanju',
+    ));
+    $set('woocommerce_new_order_settings', array(
+        'heading' => 'Nova porudžbina',
+        'subject' => '[{site_title}]: Nova porudžbina #{order_number}',
+    ));
+
+    update_option('v15_email_design_ver', $ver);
 }
 
 /** /cart/ i /checkout/ sa blokova na klasik shortcode (idempotentno). */

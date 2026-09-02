@@ -15,6 +15,14 @@
 
 if (!defined('ABSPATH')) exit;
 
+/* Zlatni brend-akcenat u email-ima (naslov + zaglavlje tabele). */
+add_filter('woocommerce_email_styles', function ($css) {
+    return $css
+        . " h1 { color: #b0894f !important; }"
+        . " th.td { color: #b0894f !important; }"
+        . " #template_header_image img { margin: 0 auto; }";
+});
+
 /* From adresa/ime za sav WP mail (WooCommerce ima i svoje, poklapamo ih u setup.php). */
 add_filter('wp_mail_from', function ($email) {
     return defined('V15_SMTP_USER') ? V15_SMTP_USER : 'office@15milja.com';
