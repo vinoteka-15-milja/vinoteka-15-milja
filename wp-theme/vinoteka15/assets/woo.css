@@ -350,12 +350,38 @@ details.filter-dropdown { position: relative; }
 .single-product .summary .price .amount {
   color: var(--clr-gold) !important; font-family: var(--ff-heading); font-size: var(--fs-2xl);
 }
+/* Add-to-cart red: stepper (− n +) + dugme u jednom redu */
+.single-product .summary form.cart { display: flex; align-items: stretch; gap: 14px; flex-wrap: wrap; margin-bottom: 8px; }
+.single-product .summary form.cart .quantity { margin: 0; }
+
+/* Stepper grupa */
+.v15-qty {
+  display: inline-flex; align-items: stretch;
+  border: 1px solid rgba(201,169,110,.35); border-radius: var(--radius-sm);
+  overflow: hidden; background: var(--clr-card);
+}
+.v15-qty-btn {
+  width: 46px; border: none; background: none; color: var(--clr-cream);
+  font-size: 22px; line-height: 1; cursor: pointer;
+  transition: background .15s ease, color .15s ease;
+}
+.v15-qty-btn:hover { background: rgba(201,169,110,.15); color: var(--clr-gold); }
+.single-product .summary .v15-qty input.qty {
+  width: 52px; text-align: center; padding: 12px 0; margin: 0;
+  background: transparent; color: var(--clr-cream);
+  border: none; border-left: 1px solid rgba(201,169,110,.22); border-right: 1px solid rgba(201,169,110,.22);
+  border-radius: 0; -moz-appearance: textfield; font-size: var(--fs-base);
+}
+.v15-qty input.qty::-webkit-outer-spin-button,
+.v15-qty input.qty::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+/* fallback dok JS ne obmota (bez steppera) */
 .single-product .summary .quantity input.qty {
   background: var(--clr-card); color: var(--clr-cream);
   border: 1px solid rgba(201,169,110,.3); border-radius: var(--radius-sm); padding: 12px; width: 70px;
 }
+
 .single-product .summary .single_add_to_cart_button {
-  background: var(--clr-gold); color: var(--clr-dark); border-radius: var(--radius-sm);
+  flex: 1 1 auto; background: var(--clr-gold); color: var(--clr-dark); border-radius: var(--radius-sm);
   text-transform: uppercase; letter-spacing: .05em; font-weight: var(--fw-bold); padding: 13px 28px;
 }
 .single-product .summary .single_add_to_cart_button:hover { background: var(--clr-gold-bright); }

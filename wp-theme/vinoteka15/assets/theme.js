@@ -217,6 +217,47 @@ function v15SyncScrollLock() {
   });
 })();
 
+/* ---- Stepper količine (− n +) na stranici proizvoda i u korpi ---- */
+(function () {
+  function enhance(input) {
+    if (input.dataset.v15qty || !input.parentNode) return;
+    input.dataset.v15qty = '1';
+    var wrap = document.createElement('div');
+    wrap.className = 'v15-qty';
+    input.parentNode.insertBefore(wrap, input);
+    var minus = document.createElement('button');
+    minus.type = 'button'; minus.className = 'v15-qty-btn v15-qty-minus';
+    minus.setAttribute('aria-label', 'Smanji'); minus.textContent = '−';
+    var plus = document.createElement('button');
+    plus.type = 'button'; plus.className = 'v15-qty-btn v15-qty-plus';
+    plus.setAttribute('aria-label', 'Povećaj'); plus.textContent = '+';
+    wrap.appendChild(minus); wrap.appendChild(input); wrap.appendChild(plus);
+    function stepBy(dir) {
+      var step = parseFloat(input.step) || 1;
+      var min = input.min !== '' ? parseFloat(input.min) : 1;
+      var max = input.max !== '' && input.max !== undefined ? parseFloat(input.max) : Infinity;
+      var val = parseFloat(input.value);
+      if (isNaN(val)) val = min || 1;
+      val += dir * step;
+      if (val < min) val = min;
+      if (isFinite(max) && val > max) val = max;
+      input.value = val;
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+    minus.addEventListener('click', function () { stepBy(-1); });
+    plus.addEventListener('click', function () { stepBy(1); });
+  }
+  function init() {
+    document.querySelectorAll(
+      '.single-product form.cart .quantity input.qty, .woocommerce-cart .quantity input.qty'
+    ).forEach(enhance);
+  }
+  if (document.readyState !== 'loading') init();
+  else document.addEventListener('DOMContentLoaded', init);
+  if (window.jQuery) window.jQuery(document.body).on('updated_cart_totals updated_wc_div', init);
+})();
+
 /* ---- Mini-korpa (slide-out) ---- */
 (function () {
   function openMC() {
