@@ -96,11 +96,18 @@ function v15_setup_email_design() {
     update_option('v15_email_design_ver', $ver);
 }
 
-/** Checkout: telefon obavezan i na nivou WC opcije (uz filter u inc/shop.php). */
+/** Checkout: telefon obavezan + srpski privacy tekst + povezana privacy strana. */
 function v15_setup_checkout() {
-    if (get_option('v15_checkout_setup') === 'done') return;
+    $ver = 2;
+    if ((int) get_option('v15_checkout_ver') >= $ver) return;
     update_option('woocommerce_checkout_phone_field', 'required');
-    update_option('v15_checkout_setup', 'done');
+    // Privacy pasus na checkout-u (SR); [privacy_policy] → link ka strani
+    update_option('woocommerce_checkout_privacy_policy_text',
+        'Vaši lični podaci biće korišćeni za obradu porudžbine, poboljšanje iskustva na sajtu i u druge svrhe opisane u našoj [privacy_policy].');
+    // Poveži WP privacy stranu sa našom „Politika privatnosti" (da [privacy_policy] daje link)
+    $pp = get_page_by_path('privatnost');
+    if ($pp) update_option('wp_page_for_privacy_policy', $pp->ID);
+    update_option('v15_checkout_ver', $ver);
 }
 
 /** /cart/ i /checkout/ sa blokova na klasik shortcode (idempotentno). */

@@ -98,6 +98,11 @@ add_filter('woocommerce_add_to_cart_fragments', function ($fragments) {
     return $fragments;
 });
 
+/* --- Naziv reda dostave u korpi/checkoutu → „Dostava" (bilo „Shipment") --- */
+add_filter('woocommerce_shipping_package_name', function ($name) {
+    return v15_is_en() ? $name : 'Dostava';
+});
+
 /* --- Checkout polja: telefon obavezan, bez „Firma" --- */
 add_filter('woocommerce_checkout_fields', function ($fields) {
     unset($fields['billing']['billing_company']);
