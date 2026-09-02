@@ -16,13 +16,38 @@ add_filter('woocommerce_product_tabs', function ($tabs) {
    (okida se u content-single-product.php, samo na single proizvodu). --- */
 add_action('woocommerce_before_single_product', 'woocommerce_breadcrumb', 5);
 
-/* --- Single: „Na upit" CTA pre add-to-cart za nekupljive --- */
+/* --- Single: redosled u summary-ju ---
+   naslov(5) → cena(10) → Šifra(15) → Kategorija(16) → Detalji(45) → dugme+brojač(60).
+   Default meta (SKU+kategorija u jednom redu) uklonjen; dodavanje u korpu premešteno na dno. */
+remove_action('woocommerce_single_product_summary', 'woocommerce_template_single_meta', 40);
+remove_action('woocommerce_single_product_summary', 'woocommerce_template_single_add_to_cart', 30);
+add_action('woocommerce_single_product_summary', 'woocommerce_template_single_add_to_cart', 60);
+
+/* Šifra (odvojen red) — trenutno SKU; zameniti POS šifrom kad stigne lista. */
+add_action('woocommerce_single_product_summary', function () {
+    global $product;
+    if (!$product) return;
+    $sku = $product->get_sku();
+    if ($sku === '') return;
+    echo '<p class="v15-meta-row"><span class="v15-meta-k">' . esc_html(v15_is_en() ? 'SKU:' : 'Šifra:') . '</span> ' . esc_html($sku) . '</p>';
+}, 15);
+
+/* Kategorija (odvojen red, odmah ispod Šifre) */
+add_action('woocommerce_single_product_summary', function () {
+    global $product;
+    if (!$product) return;
+    $cats = wc_get_product_category_list($product->get_id(), ', ');
+    if (!$cats) return;
+    echo '<p class="v15-meta-row"><span class="v15-meta-k">' . esc_html(v15_is_en() ? 'Category:' : 'Kategorija:') . '</span> ' . wp_kses_post($cats) . '</p>';
+}, 16);
+
+/* --- Single: „Na upit" CTA (za nekupljive) — uz dno, pored dodavanja u korpu --- */
 add_action('woocommerce_single_product_summary', function () {
     global $product;
     if (!$product || ($product->is_purchasable() && $product->get_price() !== '')) return;
     echo '<p class="v15-inquiry"><span class="v15-inquiry-label">' . esc_html(v15_t('Na upit')) . '</span> '
        . '<a class="btn btn-outline" href="' . esc_url(home_url('/kontakt/')) . '">' . esc_html(v15_t('Pošalji upit')) . '</a></p>';
-}, 29);
+}, 59);
 
 /* --- Single: „Detalji" spec-lista (atributi) posle add-to-cart --- */
 add_action('woocommerce_single_product_summary', function () {

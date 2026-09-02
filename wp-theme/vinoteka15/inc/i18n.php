@@ -280,6 +280,9 @@ add_filter('gettext', function ($translated, $text, $domain) {
 add_filter('ngettext', function ($translated, $single, $plural, $number, $domain) {
     if (v15_is_en() || $domain !== 'woocommerce') return $translated;
     if ($single === 'Category:') return ((int) $number > 1) ? 'Kategorije:' : 'Kategorija:';
+    if ($single === '%s has been added to your cart.') {
+        return ((int) $number > 1) ? '%s su dodati u korpu.' : '%s je dodato u korpu.';
+    }
     return $translated;
 }, 20, 5);
 
@@ -388,16 +391,26 @@ add_filter('the_content', function ($content) {
 
 /* Naslovi strana u EN */
 add_filter('the_title', function ($title, $post_id = 0) {
-    if (!v15_is_en() || is_admin()) return $title;
-    static $map = array(
-        'O nama' => 'About',
-        'Kontakt' => 'Contact',
-        'Uslovi korišćenja' => 'Terms of Service',
-        'Reklamacije i povraćaj' => 'Returns',
-        'Politika privatnosti' => 'Privacy Policy',
-        'Plaćanje i bezbednost' => 'Payment & Security',
+    if (is_admin()) return $title;
+    if (v15_is_en()) {
+        static $en = array(
+            'O nama' => 'About',
+            'Kontakt' => 'Contact',
+            'Uslovi korišćenja' => 'Terms of Service',
+            'Reklamacije i povraćaj' => 'Returns',
+            'Politika privatnosti' => 'Privacy Policy',
+            'Plaćanje i bezbednost' => 'Payment & Security',
+        );
+        return $en[$title] ?? $title;
+    }
+    // SR mod: WC-kreirane strane imaju engleske naslove
+    static $sr = array(
+        'Cart' => 'Korpa',
+        'Checkout' => 'Plaćanje',
+        'My account' => 'Moj nalog',
+        'My Account' => 'Moj nalog',
     );
-    return $map[$title] ?? $title;
+    return $sr[$title] ?? $title;
 }, 10, 2);
 
 /* COD gateway titula/opis u EN */
