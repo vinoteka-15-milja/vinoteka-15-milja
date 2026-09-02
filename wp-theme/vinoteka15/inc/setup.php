@@ -15,7 +15,9 @@ function v15_run_setup_migrations() {
     v15_setup_checkout();
     v15_setup_classic_pages();
     v15_setup_cod();
+    v15_setup_bacs();
     v15_setup_local_pickup();
+    v15_setup_courier();
     v15_setup_pages();
     v15_setup_legal_pages();
     v15_setup_nav_menu();
@@ -172,6 +174,55 @@ function v15_setup_local_pickup() {
         $zone->save();
     }
     update_option('v15_shipping_setup', 'done');
+}
+
+/** Kurirska dostava (flat_rate „Dostava kurirom") u zonu Srbija; cena po težini u inc/shop.php. */
+function v15_setup_courier() {
+    if (get_option('v15_courier_setup') === 'done') return;
+    if (!class_exists('WC_Shipping_Zones') || !class_exists('WC_Shipping_Zone')) return;
+    $zone_id = null;
+    foreach (WC_Shipping_Zones::get_zones() as $z) {
+        if (isset($z['zone_name']) && $z['zone_name'] === 'Srbija') { $zone_id = $z['zone_id']; break; }
+    }
+    if (!$zone_id) return; // zonu pravi v15_setup_local_pickup (poziva se pre)
+    $zone = new WC_Shipping_Zone($zone_id);
+    $has = false;
+    foreach ($zone->get_shipping_methods() as $m) { if ($m->id === 'flat_rate') { $has = true; break; } }
+    if (!$has) {
+        $iid = $zone->add_shipping_method('flat_rate');
+        if ($iid) {
+            update_option('woocommerce_flat_rate_' . $iid . '_settings', array(
+                'title'      => 'Dostava kurirom',
+                'cost'       => '600', // placeholder; stvarnu cenu po težini računa woocommerce_package_rates filter
+                'tax_status' => 'none',
+            ));
+        }
+        $zone->save();
+    }
+    update_option('v15_courier_setup', 'done');
+}
+
+/** BACS „Uplatom na račun" (idempotentno). NAPOMENA: broj računa je placeholder dok vlasnik ne da pravi. */
+function v15_setup_bacs() {
+    if (get_option('v15_bacs_setup') === 'done') return;
+    $s = get_option('woocommerce_bacs_settings', array());
+    if (!is_array($s)) $s = array();
+    $s = array_merge($s, array(
+        'enabled'      => 'yes',
+        'title'        => 'Uplatom na račun',
+        'description'  => 'Uplatite ukupan iznos na naš račun. Porudžbinu šaljemo/pripremamo po evidentiranoj uplati.',
+        'instructions' => 'Uplatite na račun [broj računa] ([banka]). U pozivu na broj navedite broj porudžbine.',
+    ));
+    update_option('woocommerce_bacs_settings', $s);
+    update_option('woocommerce_bacs_accounts', array(array(
+        'account_name'   => 'Vinoteka 15 Milja d.o.o.',
+        'account_number' => '[broj računa]',
+        'bank_name'      => '[banka]',
+        'sort_code'      => '',
+        'iban'           => '',
+        'bic'            => '',
+    )));
+    update_option('v15_bacs_setup', 'done');
 }
 
 /** Strane O nama i Kontakt (idempotentno). */

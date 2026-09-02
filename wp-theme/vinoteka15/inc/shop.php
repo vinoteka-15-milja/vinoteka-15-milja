@@ -103,6 +103,42 @@ add_filter('woocommerce_shipping_package_name', function ($name) {
     return v15_is_en() ? $name : 'Dostava';
 });
 
+/* --- Cena kurirske dostave po TEŽINI korpe (AKS/D Express tarife; flaša ~1.3 kg) --- */
+function v15_delivery_cost_by_weight($kg) {
+    if ($kg <= 2)  return 600;   // ~1 flaša
+    if ($kg <= 5)  return 900;   // ~2–3 flaše
+    if ($kg <= 10) return 1050;  // ~4–7 flaša
+    if ($kg <= 20) return 1400;  // ~8–15 flaša
+    if ($kg <= 30) return 1650;  // ~16–23 flaše
+    return 2500;
+}
+add_filter('woocommerce_package_rates', function ($rates, $package) {
+    if (!function_exists('WC') || !WC()->cart) return $rates;
+    $weight = (float) WC()->cart->get_cart_contents_weight();
+    foreach ($rates as $key => $rate) {
+        if ($rate->method_id === 'flat_rate') {
+            $rates[$key]->cost  = (string) v15_delivery_cost_by_weight($weight);
+            $rates[$key]->taxes = array();
+        }
+    }
+    return $rates;
+}, 20, 2);
+
+/* --- Otkupnina (pouzeće) 1,5% min 180 RSD — SAMO za kurirsku COD (ne lično preuzimanje) --- */
+add_action('woocommerce_cart_calculate_fees', function ($cart) {
+    if (is_admin() && !defined('DOING_AJAX')) return;
+    if (!function_exists('WC') || !WC()->session) return;
+    if (WC()->session->get('chosen_payment_method') !== 'cod') return;
+    $chosen = WC()->session->get('chosen_shipping_methods');
+    $courier = false;
+    if (is_array($chosen)) {
+        foreach ($chosen as $m) { if (strpos((string) $m, 'flat_rate') === 0) { $courier = true; break; } }
+    }
+    if (!$courier) return;
+    $fee = max(180, round($cart->get_subtotal() * 0.015));
+    $cart->add_fee(v15_is_en() ? 'Cash-on-delivery fee' : 'Otkupnina (pouzeće)', $fee, false);
+});
+
 /* --- Checkout polja: telefon obavezan, bez „Firma" --- */
 add_filter('woocommerce_checkout_fields', function ($fields) {
     unset($fields['billing']['billing_company']);

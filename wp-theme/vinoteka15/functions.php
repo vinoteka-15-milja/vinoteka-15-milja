@@ -38,7 +38,7 @@ add_action('wp_enqueue_scripts', function () {
     );
     wp_enqueue_style('v15-app', get_stylesheet_directory_uri() . '/assets/app.css', [], '1.7');
     wp_enqueue_style('v15-woo', get_stylesheet_directory_uri() . '/assets/woo.css', ['v15-app'], '1.15');
-    wp_enqueue_script('v15-main', get_stylesheet_directory_uri() . '/assets/theme.js', [], '1.9', true);
+    wp_enqueue_script('v15-main', get_stylesheet_directory_uri() . '/assets/theme.js', [], '1.10', true);
 }, 100);
 
 /* Kritični override INLINE na kraju <head>-a — pobeđuje plugin CSS bez obzira na redosled */

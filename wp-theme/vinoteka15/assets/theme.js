@@ -217,6 +217,17 @@ function v15SyncScrollLock() {
   });
 })();
 
+/* ---- Osveži pregled porudžbine na promenu načina plaćanja ----
+   WC podrazumevano ne osvežava totals na payment change → otkupnina (pouzeće) ne bi ušla u zbir. */
+(function () {
+  if (!window.jQuery) return;
+  window.jQuery(function ($) {
+    $(document.body).on('change', 'input[name="payment_method"]', function () {
+      $(document.body).trigger('update_checkout');
+    });
+  });
+})();
+
 /* ---- Stepper količine (− n +) na stranici proizvoda i u korpi ---- */
 (function () {
   function enhance(input) {
