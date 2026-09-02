@@ -202,27 +202,30 @@ function v15_setup_courier() {
     update_option('v15_courier_setup', 'done');
 }
 
-/** BACS „Uplatom na račun" (idempotentno). NAPOMENA: broj računa je placeholder dok vlasnik ne da pravi. */
+/** BACS „Uplatom na račun" (idempotentno, versionisano). */
 function v15_setup_bacs() {
-    if (get_option('v15_bacs_setup') === 'done') return;
+    $ver = 2;
+    if ((int) get_option('v15_bacs_ver') >= $ver) return;
+    $racun = '265-1100310081280-67';
     $s = get_option('woocommerce_bacs_settings', array());
     if (!is_array($s)) $s = array();
     $s = array_merge($s, array(
         'enabled'      => 'yes',
         'title'        => 'Uplatom na račun',
-        'description'  => 'Uplatite ukupan iznos na naš račun. Porudžbinu šaljemo/pripremamo po evidentiranoj uplati.',
-        'instructions' => 'Uplatite na račun [broj računa] ([banka]). U pozivu na broj navedite broj porudžbine.',
+        'description'  => 'Uplatite ukupan iznos na naš račun; porudžbinu pripremamo/šaljemo po evidentiranoj uplati.',
+        'instructions' => 'Uplatite na račun ' . $racun . ' (Raiffeisen banka), primalac Vinoteka 15 Milja d.o.o. '
+                        . 'U pozivu na broj navedite broj porudžbine.',
     ));
     update_option('woocommerce_bacs_settings', $s);
     update_option('woocommerce_bacs_accounts', array(array(
         'account_name'   => 'Vinoteka 15 Milja d.o.o.',
-        'account_number' => '[broj računa]',
-        'bank_name'      => '[banka]',
+        'account_number' => $racun,
+        'bank_name'      => 'Raiffeisen banka',
         'sort_code'      => '',
         'iban'           => '',
         'bic'            => '',
     )));
-    update_option('v15_bacs_setup', 'done');
+    update_option('v15_bacs_ver', $ver);
 }
 
 /** Strane O nama i Kontakt (idempotentno). */
