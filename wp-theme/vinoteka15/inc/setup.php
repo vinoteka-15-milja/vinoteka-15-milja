@@ -12,6 +12,7 @@ function v15_run_setup_migrations() {
     v15_setup_language();
     v15_setup_email_sender();
     v15_setup_email_design();
+    v15_setup_checkout();
     v15_setup_classic_pages();
     v15_setup_cod();
     v15_setup_local_pickup();
@@ -93,6 +94,13 @@ function v15_setup_email_design() {
     ));
 
     update_option('v15_email_design_ver', $ver);
+}
+
+/** Checkout: telefon obavezan i na nivou WC opcije (uz filter u inc/shop.php). */
+function v15_setup_checkout() {
+    if (get_option('v15_checkout_setup') === 'done') return;
+    update_option('woocommerce_checkout_phone_field', 'required');
+    update_option('v15_checkout_setup', 'done');
 }
 
 /** /cart/ i /checkout/ sa blokova na klasik shortcode (idempotentno). */
