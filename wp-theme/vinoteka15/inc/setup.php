@@ -52,15 +52,15 @@ function v15_setup_email_sender() {
 
 /** Dizajn email-a (boje/logo/footer) + srpski naslovi/subjekti. Versionisano. */
 function v15_setup_email_design() {
-    $ver = 2;
+    $ver = 3;
     if ((int) get_option('v15_email_design_ver') >= $ver) return;
 
     // Datum: srpski numerički (bez engleskog naziva meseca) — npr. 2.9.2026.
     update_option('date_format', 'j.n.Y.');
 
-    // Boje: tamni okvir/header (zlatni logo puca), bela sadržajna kartica, taman tekst
-    update_option('woocommerce_email_background_color', '#1a1416');
-    update_option('woocommerce_email_base_color', '#1a1416');
+    // Boje: čisto belo (bez tamnog okvira), zlatni logo/akcenti, taman tekst
+    update_option('woocommerce_email_background_color', '#ffffff');
+    update_option('woocommerce_email_base_color', '#ffffff');
     update_option('woocommerce_email_body_background_color', '#ffffff');
     update_option('woocommerce_email_text_color', '#2a2125');
     update_option('woocommerce_email_header_image', get_stylesheet_directory_uri() . '/assets/email-logo.png');

@@ -20,7 +20,8 @@ add_filter('woocommerce_email_styles', function ($css) {
     return $css
         . " h1 { color: #b0894f !important; }"
         . " th.td { color: #b0894f !important; }"
-        . " #template_header_image img { margin: 0 auto; }";
+        . " #template_header_image { text-align: center !important; }"
+        . " #template_header_image img { width: 340px !important; height: auto !important; display: block !important; margin: 0 auto !important; }";
 });
 
 /* From adresa/ime za sav WP mail (WooCommerce ima i svoje, poklapamo ih u setup.php). */
