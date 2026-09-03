@@ -98,11 +98,17 @@ function v15_setup_email_design() {
     update_option('v15_email_design_ver', $ver);
 }
 
-/** Checkout: telefon obavezan + srpski privacy tekst + povezana privacy strana. */
+/** Checkout: telefon obavezan + srpski privacy tekst + povezana privacy strana + samo Srbija. */
 function v15_setup_checkout() {
-    $ver = 2;
+    $ver = 3;
     if ((int) get_option('v15_checkout_ver') >= $ver) return;
     update_option('woocommerce_checkout_phone_field', 'required');
+    // Prodaja/dostava samo za Srbiju → polje „Zemlja" fiksno Srbija
+    update_option('woocommerce_allowed_countries', 'specific');
+    update_option('woocommerce_specific_allowed_countries', array('RS'));
+    update_option('woocommerce_ship_to_countries', 'specific');
+    update_option('woocommerce_specific_ship_to_countries', array('RS'));
+    update_option('woocommerce_default_country', 'RS');
     // Privacy pasus na checkout-u (SR); [privacy_policy] → link ka strani
     update_option('woocommerce_checkout_privacy_policy_text',
         'Vaši lični podaci biće korišćeni za obradu porudžbine, poboljšanje iskustva na sajtu i u druge svrhe opisane u našoj [privacy_policy].');

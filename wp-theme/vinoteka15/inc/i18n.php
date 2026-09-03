@@ -218,6 +218,7 @@ $GLOBALS['V15_WC_SR'] = array(
     'Order number:' => 'Broj porudžbine:',
     'Payment method:' => 'Način plaćanja:',
     'Thank you. Your order has been received.' => 'Hvala! Vaša porudžbina je primljena.',
+    'Order received' => 'Porudžbina primljena',
     // Checkout — labele/dugmad/placeholder-i
     'Have a coupon?' => 'Imate kupon?',
     'Click here to enter your code' => 'Kliknite ovde da unesete kod',

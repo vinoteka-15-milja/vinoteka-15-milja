@@ -460,6 +460,19 @@ details.filter-dropdown { position: relative; }
 .woocommerce-cart .coupon .input-text::placeholder { color: var(--clr-text-light); }
 .woocommerce-cart .coupon .button { padding: 12px 22px; white-space: nowrap; }
 
+/* Checkout raspored: jedna kolona — pregled gore → kontakt/adresa → plaćanje dole */
+.v15-checkout #order_review_heading {
+  font-family: var(--ff-heading); color: var(--clr-cream); font-size: var(--fs-2xl); margin: 0 0 16px;
+}
+.v15-checkout #customer_details.col2-set { display: block; margin: 34px 0; }
+.v15-checkout #customer_details .col-1,
+.v15-checkout #customer_details .col-2 { width: 100%; float: none; padding: 0; }
+.v15-checkout .woocommerce-billing-fields > h3,
+.v15-checkout .woocommerce-additional-fields > h3 {
+  font-family: var(--ff-heading); color: var(--clr-cream); font-size: var(--fs-xl); margin: 0 0 14px;
+}
+.v15-checkout #v15-payment-wrap { margin-top: 8px; }
+
 .woocommerce #payment .payment_methods li { color: var(--clr-cream); }
 .woocommerce #payment div.payment_box { background: var(--clr-panel); color: var(--clr-text-light); }
 .woocommerce-checkout #payment .place-order .button,

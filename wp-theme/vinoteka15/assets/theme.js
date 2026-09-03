@@ -217,6 +217,48 @@ function v15SyncScrollLock() {
   });
 })();
 
+/* ---- Checkout: adresa se traži samo za kurirsku dostavu + grad iz liste (select2) ---- */
+(function () {
+  if (!window.jQuery) return;
+  var $ = window.jQuery;
+  var ADDR = ['#billing_country_field', '#billing_address_1_field', '#billing_address_2_field',
+              '#billing_city_field', '#billing_postcode_field', '#billing_state_field'];
+  var REQ  = ['#billing_address_1_field', '#billing_city_field', '#billing_postcode_field'];
+
+  function isCourier() {
+    var $checked = $('input[name^="shipping_method"]:checked');
+    if ($checked.length) return /flat_rate/.test($checked.val());
+    var $all = $('input[name^="shipping_method"]');
+    if ($all.length === 1) return /flat_rate/.test($all.val()); // jedina metoda (hidden)
+    return false;
+  }
+  function initCity() {
+    var $c = $('#billing_city');
+    if ($c.length && $.fn.selectWoo && !$c.hasClass('select2-hidden-accessible')) {
+      $c.selectWoo({ width: '100%' });
+    }
+  }
+  function toggleAddress() {
+    var courier = isCourier();
+    ADDR.forEach(function (sel) { $(sel).toggle(courier); });
+    REQ.forEach(function (sel) {
+      var $f = $(sel);
+      $f.toggleClass('validate-required', courier);
+      var $lab = $f.find('label').first();
+      if (courier) {
+        if (!$lab.find('.required').length) $lab.append(' <abbr class="required" title="obavezno">*</abbr>');
+      } else {
+        $lab.find('.required').remove();
+      }
+    });
+    if (courier) initCity();
+  }
+
+  $(function () { initCity(); toggleAddress(); });
+  $(document.body).on('updated_checkout', function () { initCity(); toggleAddress(); });
+  $(document.body).on('change', 'input[name^="shipping_method"]', toggleAddress);
+})();
+
 /* ---- Osveži pregled porudžbine na promenu načina plaćanja ----
    WC podrazumevano ne osvežava totals na payment change → otkupnina (pouzeće) ne bi ušla u zbir. */
 (function () {
