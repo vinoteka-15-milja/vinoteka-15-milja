@@ -1,0 +1,14 @@
+{
+  "enableAllProjectMcpServers": false,
+  "deniedMcpServers": [
+    {
+      "serverName": "nebos"
+    },
+    {
+      "serverUrl": "https://api.nebbos.ai/*"
+    },
+    {
+      "serverName": "nebbos"
+    }
+  ]
+}
