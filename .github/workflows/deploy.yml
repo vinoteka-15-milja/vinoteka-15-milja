@@ -24,10 +24,14 @@ jobs:
             echo "dir=dev/" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: FTP upload
+      - name: FTPS upload
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: 88.198.1.66
+          # FTPS (šifrovano): lozinka i fajlovi ne idu kao čist tekst.
+          # Hostname (ne IP) jer sertifikat važi za dolf.dnsserve.rs; strict = proverava sertifikat.
+          server: dolf.dnsserve.rs
+          protocol: ftps
+          security: strict
           username: deploy@15milja.com
           password: ${{ secrets.FTP_PASSWORD }}
           server-dir: ${{ steps.target.outputs.dir }}

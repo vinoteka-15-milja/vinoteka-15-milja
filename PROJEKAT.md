@@ -109,7 +109,7 @@ Statički sajt + webshop (porudžbine pouzećem) za vinoteku "15 Milja" iz Lozni
 
 - **Hosting:** cPanel (ContraTeam, "Junior SSD"), server IP `88.198.1.66`, nalog `miljacom`, sajt u `public_html`.
 - **Domen:** `15milja.com` registrovan na Namecheap.
-- **Auto-deploy:** GitHub Action `.github/workflows/deploy.yml` — svaki **push na `main`** automatski uploaduje izmene na cPanel preko FTP-a (SamKirkland/FTP-Deploy-Action). Prvi pun upload urađen 2026-06-17. FTP lozinka je GitHub Secret `FTP_PASSWORD` (nije u kodu).
+- **Auto-deploy:** GitHub Action `.github/workflows/deploy.yml` — svaki **push na `main`** automatski uploaduje izmene na cPanel preko **FTPS-a** (SamKirkland/FTP-Deploy-Action; od 2026-11-04 host `dolf.dnsserve.rs` + `security: strict` — sertifikat ne važi za IP, zato ne `88.198.1.66`). Ručni upload: `curl --ssl-reqd ... "ftp://dolf.dnsserve.rs/..."`, nikad običan FTP. Prvi pun upload urađen 2026-06-17. FTP lozinka je GitHub Secret `FTP_PASSWORD` (nije u kodu).
 - **Tok rada / model grana (od 2026-06-17):** main i dev su NAMERNO različiti.
   - `main` → **15milja.com** = javni "Sajt u izradi" overlay (under-construction blok u `index.html` je AKTIVAN). Pun katalog je u kodu ali skriven overlayem.
   - `dev` → **dev.15milja.com** (zaključan lozinkom) = pun shop na kome se radi (under-construction blok ZAKOMENTARISAN).
